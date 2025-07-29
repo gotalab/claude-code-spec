@@ -1,7 +1,7 @@
 # Claude Code 規格驅動開發
 
 > 🌐 **語言**  
-> 📖 **[英文版](README_en.md)** | 📖 **[日本語版 README](README.md)** | 📖 **繁體中文說明**（本頁）
+> 📖 **[英文版](README_en.md)** | 📖 **[日本語版 README](README.md)** | 📖 **[简体中文说明](README_zh-CN.md)** | 📖 **繁體中文說明**（本頁） | 📖 **[العربية](README_ar.md)** | 📖 **[فارسی](README_fa.md)** | 📖 **[Русский](README_ru.md)**
 
 > [!警告]
 > 這是初始版本，將隨著使用逐步改進

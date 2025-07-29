@@ -1,5 +1,8 @@
 # Claude Code Spec-Driven Development
 
+> 🌐 **語言**  
+> 📖 **[English Version](CLAUDE_en.md)** | 📖 **[日本語版](CLAUDE_ja.md)** | 📖 **[简体中文版](CLAUDE_zh-CN.md)** | 📖 **繁體中文版** (本頁) | 📖 **[العربية](CLAUDE_ar.md)** | 📖 **[فارسی](CLAUDE_fa.md)** | 📖 **[Русский](CLAUDE_ru.md)**
+
 Kiro-style Spec Driven Development implementation using claude code slash commands, hooks and agents.
 
 ## Project Context
