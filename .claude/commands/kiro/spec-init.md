@@ -34,10 +34,10 @@ From the provided description ($ARGUMENTS), extract:
 - Any specific implementation details mentioned
 
 ### 2. Generate Feature Name
-Based on the analysis, create a concise, descriptive feature name that captures the essence of the project.
+Based on the analysis, create a concise, descriptive feature name that captures the essence of the project and use 'date +"%Y%m%d%H%M"' command generate a datetime to add at the beginning of the file, e.g. (202501011230-generated-feature-name)
 
 ### 3. Create Spec Directory
-Create `.kiro/specs/{generated-feature-name}/` directory with template files:
+Create `.kiro/specs/{{datetime}-generated-feature-name}/` directory with template files:
 - `requirements.md` - Empty template for user stories
 - `design.md` - Empty template for technical design  
 - `tasks.md` - Empty template for implementation tasks
