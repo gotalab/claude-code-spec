@@ -1,6 +1,7 @@
 ---
 description: Show specification status and progress
 allowed-tools: Bash, Read, Glob, Write, Edit, MultiEdit, Update
+argument-hint: <feature-name>
 ---
 
 # Specification Status
@@ -9,20 +10,37 @@ Show current status and progress for feature: **$ARGUMENTS**
 
 ## Spec Context
 
-### Spec Files
-- Spec directory: !`ls -la .kiro/specs/$ARGUMENTS/`
+### All Specs Overview
+- Available specs: !`ccsdd list-all-specs`
+- Active specs: !`ccsdd find-active-specs`
+
+## Task: Generate Status Report
+
+**Check if $ARGUMENTS is provided:**
+
+### If feature name provided ($ARGUMENTS is not empty):
+Show detailed status for the specific feature:
+
+#### Spec Files Context
+- Spec directory: !`ccsdd ls-dir .kiro/specs/$ARGUMENTS/`
 - Spec metadata: @.kiro/specs/$ARGUMENTS/spec.json
 - Requirements: @.kiro/specs/$ARGUMENTS/requirements.md
 - Design: @.kiro/specs/$ARGUMENTS/design.md
 - Tasks: @.kiro/specs/$ARGUMENTS/tasks.md
 
-### All Specs Overview
-- Available specs: !`ls -la .kiro/specs/`
-- Active specs: !`find .kiro/specs/ -name "spec.json" -exec grep -l "implementation_ready.*true" {} \;`
+Create comprehensive status report for the specification in the language specified in spec.json.
 
-## Task: Generate Status Report
+### If no feature name provided ($ARGUMENTS is empty):
+Show overview status for all available specifications:
 
-Create comprehensive status report for the specification in the language specified in spec.json (check `@.kiro/specs/$ARGUMENTS/spec.json` for "language" field):
+1. **List all specifications** with basic status
+2. **For each spec**, show:
+   - Feature name and brief description
+   - Current phase (requirements/design/tasks/implementation)
+   - Overall completion percentage
+   - Last update date
+3. **Highlight active specs** that are ready for implementation
+4. **Suggest next actions** for each spec
 
 ### 1. Specification Overview
 Display:

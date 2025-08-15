@@ -1,0 +1,41 @@
+{
+  "name": "claude-code-spec",
+  "version": "0.0.1",
+  "description": "Claude Code Spec-Driven Development",
+  "type": "module",
+  "main": "./src/ccsdd.mjs",
+  "bin": {
+    "ccsdd": "./src/ccsdd.mjs"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "ccsdd-test": "node ./src/ccsdd.mjs check-file README.md"
+  },
+  "keywords": [
+    "kiro",
+    "spec-driven-development", 
+    "claude-code",
+    "cross-platform",
+    "development-tools"
+  ],
+  "author": "Claude Code Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anthropics/claude-code-spec.git"
+  },
+  "files": [
+    "src/ccsdd.mjs"
+  ],
+  "devDependencies": {
+    "@vitest/coverage-v8": "^3.2.4",
+    "@vitest/ui": "^3.2.4", 
+    "vitest": "^3.2.4"
+  }
+}
