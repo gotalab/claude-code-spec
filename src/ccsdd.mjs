@@ -75,16 +75,16 @@ export function countCustomSteeringNumber() {
 export function findProjectFiles() {
   const extensions = ['.py', '.js', '.ts', '.jsx', '.tsx', '.java', '.go', '.rs', '.c', '.cpp', '.h', '.html', '.css', '.md', ".cs"];
   const excludeDirs = ['node_modules', '.git', 'dist'];
-  
+
   function findFiles(dir, files = []) {
     if (excludeDirs.includes(path.basename(dir))) return files;
-    
+
     try {
       const items = fs.readdirSync(dir);
       for (const item of items) {
         const fullPath = path.join(dir, item);
         const stat = fs.statSync(fullPath);
-        
+
         if (stat.isDirectory() && !excludeDirs.includes(item)) {
           findFiles(fullPath, files);
         } else if (stat.isFile() && extensions.some(ext => item.endsWith(ext))) {
@@ -110,19 +110,19 @@ export function findProjectFiles() {
  */
 export function findConfigFiles() {
   const configFiles = [
-    'package.json', 'requirements.txt', 'pom.xml', 
+    'package.json', 'requirements.txt', 'pom.xml',
     'Cargo.toml', 'go.mod', 'pyproject.toml', 'tsconfig.json'
   ];
-  
+
   function findConfigs(dir, depth = 0, maxDepth = 3, files = []) {
     if (depth > maxDepth) return files;
-    
+
     try {
       const items = fs.readdirSync(dir);
       for (const item of items) {
         const fullPath = path.join(dir, item);
         const stat = fs.statSync(fullPath);
-        
+
         if (stat.isDirectory() && item !== 'node_modules' && item !== '.git') {
           findConfigs(fullPath, depth + 1, maxDepth, files);
         } else if (stat.isFile() && configFiles.includes(item)) {
@@ -149,16 +149,16 @@ export function findConfigFiles() {
 export function findDocs() {
   const docPatterns = ['README', 'CHANGELOG', 'LICENSE'];
   const excludeDirs = ['node_modules', '.git', '.kiro'];
-  
+
   function findDocFiles(dir, depth = 0, maxDepth = 3, files = []) {
     if (depth > maxDepth) return files;
-    
+
     try {
       const items = fs.readdirSync(dir);
       for (const item of items) {
         const fullPath = path.join(dir, item);
         const stat = fs.statSync(fullPath);
-        
+
         if (stat.isDirectory() && !excludeDirs.includes(item)) {
           findDocFiles(fullPath, depth + 1, maxDepth, files);
         } else if (stat.isFile()) {
@@ -237,14 +237,14 @@ export function findActiveSpecs() {
     for (const item of items) {
       const fullPath = path.join(dir, item);
       const stat = fs.statSync(fullPath);
-      
+
       if (stat.isDirectory()) {
         findSpecs(fullPath, files);
       } else if (item === 'spec.json') {
         try {
           const content = fs.readFileSync(fullPath, 'utf8');
-          if (content.includes('"implementation_ready": true') || 
-              content.includes('"implementation_ready":true')) {
+          if (content.includes('"implementation_ready": true') ||
+            content.includes('"implementation_ready":true')) {
             files.push(fullPath.replace(/\\/g, '/'));
           }
         } catch (err) {
@@ -273,7 +273,7 @@ export function listSteeringFiles() {
 
   const files = fs.readdirSync(steeringDir)
     .filter(file => file.endsWith('.md'));
-  
+
   for (const file of files) {
     const fullPath = path.join(steeringDir, file);
     const stat = fs.statSync(fullPath);
@@ -287,9 +287,9 @@ export function listSteeringFiles() {
  */
 export function getLastSteeringCommit() {
   try {
-    const result = execSync('git log -1 --oneline -- .kiro/steering/', { 
-      encoding: 'utf8', 
-      stdio: ['pipe', 'pipe', 'pipe'] 
+    const result = execSync('git log -1 --oneline -- .kiro/steering/', {
+      encoding: 'utf8',
+      stdio: ['pipe', 'pipe', 'pipe']
     });
     process.stdout.write(result.trim() + '\n');
   } catch (error) {
@@ -305,25 +305,25 @@ export function getCommitsSinceLastSteering() {
     // Get last steering commit hash
     let lastCommit;
     try {
-      lastCommit = execSync('git log -1 --format=%H -- .kiro/steering/', { 
-        encoding: 'utf8', 
-        stdio: ['pipe', 'pipe', 'pipe'] 
+      lastCommit = execSync('git log -1 --format=%H -- .kiro/steering/', {
+        encoding: 'utf8',
+        stdio: ['pipe', 'pipe', 'pipe']
       }).trim();
     } catch {
       process.stdout.write('No previous steering update found\n');
       return;
     }
-    
+
     if (!lastCommit) {
       process.stdout.write('No previous steering update found\n');
       return;
     }
-    
+
     // Get commits since last steering update
     try {
-      const commits = execSync(`git log --oneline ${lastCommit}..HEAD --max-count=20`, { 
-        encoding: 'utf8', 
-        stdio: ['pipe', 'pipe', 'pipe'] 
+      const commits = execSync(`git log --oneline ${lastCommit}..HEAD --max-count=20`, {
+        encoding: 'utf8',
+        stdio: ['pipe', 'pipe', 'pipe']
       });
       if (commits.trim()) {
         process.stdout.write(commits.trim() + '\n');
@@ -343,9 +343,9 @@ export function getCommitsSinceLastSteering() {
  */
 export function getGitStatus() {
   try {
-    const result = execSync('git status --porcelain', { 
-      encoding: 'utf8', 
-      stdio: ['pipe', 'pipe', 'pipe'] 
+    const result = execSync('git status --porcelain', {
+      encoding: 'utf8',
+      stdio: ['pipe', 'pipe', 'pipe']
     });
     if (result.trim()) {
       process.stdout.write(result.trim() + '\n');
@@ -368,14 +368,14 @@ export function lsDir(dirPath = '.') {
     }
 
     const items = fs.readdirSync(dirPath);
-    
+
     // Include . and .. for compatibility
     const allItems = ['.', '..', ...items];
-    
+
     for (const item of allItems) {
       const fullPath = path.join(dirPath, item);
       let stat;
-      
+
       try {
         // Handle . and .. specially
         if (item === '.') {
@@ -385,13 +385,13 @@ export function lsDir(dirPath = '.') {
         } else {
           stat = fs.statSync(fullPath);
         }
-        
+
         const type = stat.isDirectory() ? 'd' : '-';
         const perms = 'rwxrwxrwx';
         const size = stat.isDirectory() ? 4096 : stat.size;
         const date = stat.mtime.toISOString().split('T')[0];
         const time = stat.mtime.toTimeString().slice(0, 5);
-        
+
         console.log(`${type}${perms} 1 user user ${size} ${date} ${time} ${item}`);
       } catch (err) {
         // If can't stat, show basic info
@@ -409,16 +409,16 @@ export function lsDir(dirPath = '.') {
 export function findSpecialDirs() {
   const patterns = ['test', 'spec', 'api', 'auth', 'security'];
   const excludeDirs = ['node_modules', '.git'];
-  
+
   function findDirs(dir, files = []) {
     try {
       const items = fs.readdirSync(dir);
       for (const item of items) {
         if (excludeDirs.includes(item)) continue;
-        
+
         const fullPath = path.join(dir, item);
         const stat = fs.statSync(fullPath);
-        
+
         if (stat.isDirectory()) {
           if (patterns.some(p => item.toLowerCase().includes(p))) {
             files.push(fullPath.replace(/\\/g, '/'));
@@ -445,22 +445,22 @@ export function findSpecialDirs() {
  */
 export function findConfigPatterns() {
   const excludeDirs = ['node_modules'];
-  
+
   function findConfigs(dir, files = []) {
     try {
       const items = fs.readdirSync(dir);
       for (const item of items) {
         if (excludeDirs.includes(item)) continue;
-        
+
         const fullPath = path.join(dir, item);
         const stat = fs.statSync(fullPath);
-        
+
         if (stat.isDirectory()) {
           findConfigs(fullPath, files);
         } else if (stat.isFile()) {
-          if (item.includes('.config.') || 
-              item.includes('rc.') || 
-              item.startsWith('.') && item.endsWith('rc')) {
+          if (item.includes('.config.') ||
+            item.includes('rc.') ||
+            item.startsWith('.') && item.endsWith('rc')) {
             files.push(fullPath.replace(/\\/g, '/'));
           }
         }
@@ -543,8 +543,8 @@ const helpers = {
 // Only run CLI if this is the main module
 // Handle both direct execution and npm run/link scenarios
 const isMainModule = import.meta.url === `file://${process.argv[1]}` ||
-                     import.meta.url === `file://${process.argv[1]}.mjs` ||
-                     process.argv[1].endsWith('ccsdd.mjs');
+  import.meta.url === `file://${process.argv[1]}.mjs` ||
+  process.argv[1].endsWith('ccsdd.mjs');
 
 if (isMainModule) {
   const args = process.argv.slice(2);

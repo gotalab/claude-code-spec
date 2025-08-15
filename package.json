@@ -24,18 +24,18 @@
   "author": "Claude Code Team",
   "license": "MIT",
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=22.0.0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/anthropics/claude-code-spec.git"
+    "url": "https://github.com/gotalab/claude-code-spec.git"
   },
   "files": [
     "src/ccsdd.mjs"
   ],
   "devDependencies": {
     "@vitest/coverage-v8": "^3.2.4",
-    "@vitest/ui": "^3.2.4", 
+    "@vitest/ui": "^3.2.4",
     "vitest": "^3.2.4"
   }
 }
