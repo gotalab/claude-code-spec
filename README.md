@@ -52,12 +52,12 @@ ccsdd find-project-files
 ccsdd list-all-specs
 ```
 
-CCSCDDは`/kiro:*`コマンド内で自動的に呼び出されるため、通常は直接使用する必要はありません。
+CCSDDは`/kiro:*`コマンド内で自動的に呼び出されるため、通常は直接使用する必要はありません。
 
 #### アンインストール
 
 ```bash
-# CCSCDDをアンインストール
+# CCSDDをアンインストール
 npm uninstall -g claude-code-spec
 ```
 
@@ -70,7 +70,7 @@ Claude Code Spec-Driven Developmentを自分のプロジェクトに導入する
 
 ### 初回セットアップ手順
 
-1. **CCSCDDをインストール**（上記参照）
+1. **CCSDDをインストール**（上記参照）
 2. **ファイルをコピー**
 3. **CLAUDE.mdをコピー**してプロジェクトに合わせて調整
 4. **最初のコマンドを実行**:
