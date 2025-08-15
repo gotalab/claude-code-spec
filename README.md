@@ -18,6 +18,49 @@ Claude CodeのSlash CommandsとCLAUDE.mdを使用して、Kiro IDEに組み込�
 
 ## セットアップ
 
+### CCSDD CLIツールのインストール
+
+Claude Code Spec-Driven Developmentを使用するには、まずCCSDDコマンドラインツールをインストールします。
+
+#### インストール
+
+```bash
+# このリポジトリをクローン
+git clone https://github.com/gotalab/claude-code-spec.git
+cd claude-code-spec
+
+# CCSCDDをグローバルにインストール
+npm install -g .
+```
+
+インストール後、どこからでも`ccsdd`コマンドが使用できるようになります：
+
+```bash
+# インストール確認
+ccsdd --version
+
+# 利用可能なコマンド一覧
+ccsdd --help
+
+# 使用例: ファイル存在確認
+ccsdd check-file README.md
+
+# 使用例: プロジェクトファイル一覧
+ccsdd find-project-files
+
+# 使用例: spec一覧表示
+ccsdd list-all-specs
+```
+
+CCSCDDは`/kiro:*`コマンド内で自動的に呼び出されるため、通常は直接使用する必要はありません。
+
+#### アンインストール
+
+```bash
+# CCSCDDをアンインストール
+npm uninstall -g claude-code-spec
+```
+
 ### 自分のプロジェクトに導入する
 
 Claude Code Spec-Driven Developmentを自分のプロジェクトに導入するには、以下の2つのファイル/ディレクトリをコピーするだけ
@@ -25,12 +68,12 @@ Claude Code Spec-Driven Developmentを自分のプロジェクトに導入する
 1. **`.claude/commands/` ディレクトリ** - Slash Commandsの定義
 2. **`CLAUDE.md` ファイル** - Claude Codeの設定とプロジェクト指示
 
-
 ### 初回セットアップ手順
 
-1. **ファイルをコピー**（上記参照）
-2. **CLAUDE.mdをコピー**してプロジェクトに合わせて調整
-3. **最初のコマンドを実行**:
+1. **CCSCDDをインストール**（上記参照）
+2. **ファイルをコピー**
+3. **CLAUDE.mdをコピー**してプロジェクトに合わせて調整
+4. **最初のコマンドを実行**:
    ```bash
    # オプション: ステアリング文書を作成
    /kiro:steering

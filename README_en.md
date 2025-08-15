@@ -14,6 +14,49 @@ This project provides a toolset for efficient Spec-Driven Development using Clau
 
 ## Setup
 
+### CCSDD CLI Tool Installation
+
+To use Claude Code Spec-Driven Development, first install the CCSDD command-line tool.
+
+#### Installation
+
+```bash
+# Clone this repository
+git clone https://github.com/gotalab/claude-code-spec.git
+cd claude-code-spec
+
+# Install CCSDD globally
+npm install -g .
+```
+
+After installation, you can use the `ccsdd` command from anywhere:
+
+```bash
+# Check installation
+ccsdd --version
+
+# List available commands
+ccsdd --help
+
+# Usage example: Check file existence
+ccsdd check-file README.md
+
+# Usage example: List project files
+ccsdd find-project-files
+
+# Usage example: List all specs
+ccsdd list-all-specs
+```
+
+CCSDD is automatically called from `/kiro:*` commands, so you typically don't need to use it directly.
+
+#### Uninstallation
+
+```bash
+# Uninstall CCSDD
+npm uninstall -g claude-code-spec
+```
+
 ### Integrating into Your Own Project
 
 To integrate Claude Code Spec-Driven Development into your project, simply copy these 2 files/directories:
@@ -21,13 +64,13 @@ To integrate Claude Code Spec-Driven Development into your project, simply copy 
 1. **`.claude/commands/` directory** - Slash Commands definitions
 2. **`CLAUDE_en.md` file** - English version of Claude Code configuration and project instructions
 
-
 ### Initial Setup Steps
 
-1. **Copy files** (see above)
-2. **Copy CLAUDE_en.md and rename it to CLAUDE.md**, then adjust it for your project
-3. **Configure language** (if needed): If generated content appears in Japanese, change `"language": "japanese"` to `"language": "english"` in `.claude/commands/kiro/spec-init.md`
-4. **Run initial commands**:
+1. **Install CCSDD** (see above)
+2. **Copy files**
+3. **Copy CLAUDE_en.md and rename it to CLAUDE.md**, then adjust it for your project
+4. **Configure language** (if needed): If generated content appears in Japanese, change `"language": "japanese"` to `"language": "english"` in `.claude/commands/kiro/spec-init.md`
+5. **Run initial commands**:
    ```bash
    # Optional: Create steering documents
    /kiro:steering

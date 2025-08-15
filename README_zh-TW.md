@@ -14,6 +14,49 @@
 
 ## 安裝與設定
 
+### CCSDD CLI 工具安裝
+
+要使用 Claude Code 規格驅動開發，首先需要安裝 CCSDD 命令列工具。
+
+#### 安裝
+
+```bash
+# 複製此資源庫
+git clone https://github.com/gotalab/claude-code-spec.git
+cd claude-code-spec
+
+# 全域安裝 CCSDD
+npm install -g .
+```
+
+安裝後，你可以在任何地方使用 `ccsdd` 命令：
+
+```bash
+# 檢查安裝
+ccsdd --version
+
+# 列出可用命令
+ccsdd --help
+
+# 使用範例：檢查檔案是否存在
+ccsdd check-file README.md
+
+# 使用範例：列出專案檔案
+ccsdd find-project-files
+
+# 使用範例：列出所有規格
+ccsdd list-all-specs
+```
+
+CCSDD 會自動從 `/kiro:*` 命令中調用，因此通常不需要直接使用。
+
+#### 解除安裝
+
+```bash
+# 解除安裝 CCSDD
+npm uninstall -g claude-code-spec
+```
+
 ### 整合到你的專案
 
 要將 Claude Code 規格驅動開發整合進你的專案，只需複製以下兩個檔案/目錄：
@@ -23,10 +66,11 @@
 
 ### 初始設定步驟
 
-1. **複製檔案**（如上）
-2. **將 CLAUDE_zh-TW.md 複製並重新命名為 CLAUDE.md**，再根據你的專案調整內容
-3. **語言設定**（如有需要）：若產生內容為日文，請將 `.claude/commands/kiro/spec-init.md` 中的 `"language": "japanese"` 改為 `"language": "traditional chinese"`
-4. **執行初始指令**：
+1. **安裝 CCSDD**（如上）
+2. **複製檔案**
+3. **將 CLAUDE_zh-TW.md 複製並重新命名為 CLAUDE.md**，再根據你的專案調整內容
+4. **語言設定**（如有需要）：若產生內容為日文，請將 `.claude/commands/kiro/spec-init.md` 中的 `"language": "japanese"` 改為 `"language": "traditional chinese"`
+5. **執行初始指令**：
    ```bash
    # 選用：建立 steering 文件
    /kiro:steering
