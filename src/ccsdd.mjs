@@ -12,7 +12,7 @@ import path from 'path';
 import { execSync } from 'child_process';
 
 // Version info
-const VERSION = '1.0.0';
+const VERSION = '0.0.1';
 
 // ============================================================================
 // Command Functions
@@ -73,7 +73,7 @@ export function countCustomSteeringNumber() {
  * Find project source files
  */
 export function findProjectFiles() {
-  const extensions = ['.py', '.js', '.ts', '.jsx', '.tsx', '.java', '.go', '.rs'];
+  const extensions = ['.py', '.js', '.ts', '.jsx', '.tsx', '.java', '.go', '.rs', '.c', '.cpp', '.h', '.html', '.css', '.md', ".cs"];
   const excludeDirs = ['node_modules', '.git', 'dist'];
   
   function findFiles(dir, files = []) {
