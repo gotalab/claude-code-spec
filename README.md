@@ -29,7 +29,7 @@ Claude Code Spec-Driven Developmentを使用するには、まずCCSDDコマン�
 git clone https://github.com/gotalab/claude-code-spec.git
 cd claude-code-spec
 
-# CCSCDDをグローバルにインストール
+# CCSDDをグローバルにインストール
 npm install -g .
 ```
 
