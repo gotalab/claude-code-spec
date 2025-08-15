@@ -243,12 +243,12 @@ export function findActiveSpecs() {
       } else if (item === 'spec.json') {
         try {
           const content = fs.readFileSync(fullPath, 'utf8');
-          if (content.includes('"implementation_ready": true') ||
-            content.includes('"implementation_ready":true')) {
+          const specData = JSON.parse(content);
+          if (specData.implementation_ready === true) {
             files.push(fullPath.replace(/\\/g, '/'));
           }
         } catch (err) {
-          // Ignore errors
+          // Ignore errors (invalid JSON or file read issues)
         }
       }
     }
