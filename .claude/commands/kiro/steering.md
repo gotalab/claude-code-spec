@@ -18,9 +18,9 @@ Intelligently create or update steering documents in `.kiro/steering/` to mainta
 ## Project Analysis
 
 ### Current Project State
-- Project files: !`find . -path ./node_modules -prune -o -path ./.git -prune -o -path ./dist -prune -o -type f \( -name '*.py' -o -name '*.js' -o -name '*.ts' -o -name '*.jsx' -o -name '*.tsx' -o -name '*.java' -o -name '*.go' -o -name '*.rs' \) -print 2>/dev/null | head -10`
-- Configuration files: !`find . -maxdepth 3 \( -name 'package.json' -o -name 'requirements.txt' -o -name 'pom.xml' -o -name 'Cargo.toml' -o -name 'go.mod' -o -name 'pyproject.toml' -o -name 'tsconfig.json' \) 2>/dev/null`
-- Documentation: !`find . -maxdepth 3 -path ./node_modules -prune -o -path ./.git -prune -o -path ./.kiro -prune -o \( -name 'README*' -o -name 'CHANGELOG*' -o -name 'LICENSE*' -o -name '*.md' \) -print 2>/dev/null | head -10`
+- Project files: !`find . -path ./node_modules -prune -o -path ./.git -prune -o -path ./dist -prune -o -type f \( -name '*.py' -o -name '*.js' -o -name '*.ts' -o -name '*.jsx' -o -name '*.tsx' -o -name '*.java' -o -name '*.go' -o -name '*.rs' \) -print 2>/dev/null || echo 'No source files found'`
+- Configuration files: !`find . -maxdepth 3 \( -name 'package.json' -o -name 'requirements.txt' -o -name 'pom.xml' -o -name 'Cargo.toml' -o -name 'go.mod' -o -name 'pyproject.toml' -o -name 'tsconfig.json' \) 2>/dev/null || echo 'No config files found'`
+- Documentation: !`find . -maxdepth 3 -path ./node_modules -prune -o -path ./.git -prune -o -path ./.kiro -prune -o \( -name 'README*' -o -name 'CHANGELOG*' -o -name 'LICENSE*' -o -name '*.md' \) -print 2>/dev/null || echo 'No documentation files found'`
 
 ### Recent Changes (if updating)
 - Last steering update: !`git log -1 --oneline -- .kiro/steering/ 2>/dev/null || echo "No previous steering commits"`
