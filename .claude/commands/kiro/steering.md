@@ -14,7 +14,7 @@ Intelligently create or update steering documents in `.kiro/steering/` to mainta
 - Technology stack: !`[ -f ".kiro/steering/tech.md" ] && echo "✅ EXISTS - Will be updated preserving custom content" || echo "📝 Not found - Will be created"`
 - Project structure: !`[ -f ".kiro/steering/structure.md" ] && echo "✅ EXISTS - Will be updated preserving custom content" || echo "📝 Not found - Will be created"`
 - Steering directory: !`test -d .kiro/steering && echo '📁 Directory exists' || echo '📋 No steering directory yet'`
-- Custom steering files count: !`find .kiro/steering -maxdepth 1 -type f -name '*.md' 2>/dev/null | grep -v 'product.md' | grep -v 'tech.md' | grep -v 'structure.md' | wc -l || echo '0'`
+- Custom steering files count: !`[ -d .kiro/steering ] && find .kiro/steering -maxdepth 1 -type f -name '*.md' ! -name 'product.md' ! -name 'tech.md' ! -name 'structure.md' | wc -l | sed 's/^0$/📋 No custom files/; s/^\([1-9][0-9]*\)$/🔧 \1 custom file(s) found - Will be preserved/' || echo '📋 No custom files'`
 
 ## Project Analysis
 
