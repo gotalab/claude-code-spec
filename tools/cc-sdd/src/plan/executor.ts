@@ -3,6 +3,7 @@ import path from 'node:path';
 import type { ProcessedArtifact } from '../manifest/processor.js';
 import type { ResolvedConfig } from '../cli/config.js';
 import { contextFromResolved } from '../template/fromResolved.js';
+import type { TemplateContext } from '../template/context.js';
 import { renderTemplateString, renderJsonTemplate } from '../template/renderer.js';
 
 export type ExecOptions = {
@@ -85,10 +86,10 @@ const processTemplateFile = async (
   srcAbs: string,
   outAbs: string,
   resolved: ResolvedConfig,
+  ctx: TemplateContext,
   cwd: string,
 ): Promise<string> => {
   const raw = await readFile(srcAbs, 'utf8');
-  const ctx = contextFromResolved(resolved);
   if (outAbs.endsWith('.json')) {
     const obj = renderJsonTemplate(raw, resolved.agent, ctx);
     const text = JSON.stringify(obj, null, 2) + '\n';
@@ -139,6 +140,7 @@ export const executeProcessedArtifacts = async (
   const cwd = opts.cwd ?? process.cwd();
   const templatesRoot = opts.templatesRoot ?? cwd;
   const policy = resolved.effectiveOverwrite;
+  const ctx = contextFromResolved(resolved);
   let written = 0;
   let skipped = 0;
 
@@ -160,7 +162,7 @@ export const executeProcessedArtifacts = async (
       const srcAbs = path.resolve(templatesRoot, it.source.from);
       const dstDir = path.resolve(cwd, it.source.toDir);
       const outAbs = path.join(dstDir, it.source.outFile);
-      const content = await processTemplateFile(srcAbs, outAbs, resolved, cwd);
+      const content = await processTemplateFile(srcAbs, outAbs, resolved, ctx, cwd);
       const res = await writeTextFile(outAbs, content, cwd, resolved, policy, opts);
       if (res === 'written') written++; else skipped++;
       continue;
@@ -176,13 +178,13 @@ export const executeProcessedArtifacts = async (
         const outAbs = path.join(toDir, outName);
         if (mode === 'json') {
           const raw = await readFile(src, 'utf8');
-          const obj = renderJsonTemplate(raw, resolved.agent, contextFromResolved(resolved));
+          const obj = renderJsonTemplate(raw, resolved.agent, ctx);
           const text = JSON.stringify(obj, null, 2) + '\n';
           const res = await writeTextFile(outAbs, text, cwd, resolved, policy, opts);
           if (res === 'written') written++; else skipped++;
         } else {
           const raw = await readFile(src, 'utf8');
-          const text = renderTemplateString(raw, resolved.agent, contextFromResolved(resolved));
+          const text = renderTemplateString(raw, resolved.agent, ctx);
           const res = await writeTextFile(outAbs, text, cwd, resolved, policy, opts);
           if (res === 'written') written++; else skipped++;
         }
