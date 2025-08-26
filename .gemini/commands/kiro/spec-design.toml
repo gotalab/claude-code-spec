@@ -317,7 +317,7 @@ Threat modeling, security controls, compliance requirements.
 
 ### 3. Design Document Generation & Metadata Update
 - Generate complete design document following structure guidelines
-- Update `@.kiro/specs/{{args}}/spec.json`:
+- Update `.kiro/specs/{{args}}/spec.json`:
 ```json
 {
   "phase": "design-generated", 
