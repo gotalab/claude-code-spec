@@ -1,19 +1,22 @@
-description = "Create custom Kiro steering documents for specialized project contexts"
+<meta>
+description: Create custom Kiro steering documents for specialized project contexts
+</meta>
 
-prompt = """
 # Kiro Custom Steering Creation
 
-Create custom steering documents in `{{KIRO_DIR}}/steering/` for specialized contexts beyond the three foundational files (product.md, tech.md, structure.md).
+Create custom steering documents in `{{KIRO_DIR}}/steering/` for specialized contexts beyond the three foundational files (`product.md`, `tech.md`, `structure.md`).
+
+Tool policy: Use Cursor file tools (read_file/list_dir/glob_file_search/apply_patch/edit_file); no shell.
 
 ## Current Steering Status
 
 ### Existing Steering Documents
-- Core steering files: !{ls -la {{KIRO_DIR}}/steering/*.md 2>/dev/null || echo "No steering directory found"}
-- Custom steering count: !{find {{KIRO_DIR}}/steering -maxdepth 1 -name '*.md' ! -name 'product.md' ! -name 'tech.md' ! -name 'structure.md' 2>/dev/null | wc -l || echo "0"}
+- Foundational steering files: Discover via list_dir/glob_file_search under `{{KIRO_DIR}}/steering/`
+- Custom steering count: Count non-core `.md` files in `{{KIRO_DIR}}/steering` via list_dir/glob_file_search
 
 ### Project Analysis
-- Specialized areas: !{find . -name "test*" -o -name "spec*" -o -name "api" -o -name "auth" -o -name "security" 2>/dev/null || echo "No specialized directories found"}
-- Config patterns: !{find . -name "*.config.*" -o -name "*rc.*" -o -name ".*rc" 2>/dev/null || echo "No config files found"}
+- Specialized areas: Discover notable directories via glob_file_search (e.g., `**/api/**`, `**/auth/**`, `**/security/**`, `**/test*/**`, `**/spec*/**`)
+- Config patterns: Discover common config files via glob_file_search (e.g., `*.config.*`, `*rc.*`, `.*rc`)
 
 ## Task: Create Custom Steering Document
 
@@ -25,7 +28,6 @@ You will create a new custom steering document based on user requirements. Commo
    - REST/GraphQL conventions
    - Error handling patterns
    - Authentication/authorization approaches
-   - Rate limiting and pagination
    - API versioning strategy
 
 2. **Testing Approach** (`testing.md`)
@@ -149,4 +151,4 @@ Create the custom steering document with:
    - Follows markdown best practices
 
 Remember: Custom steering documents should supplement, not replace, the foundational three files. They provide specialized context for specific aspects of your project.
-"""
+ultrathink

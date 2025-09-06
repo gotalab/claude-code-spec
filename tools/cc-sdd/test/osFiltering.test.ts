@@ -16,7 +16,7 @@ describe('OS filtering in processManifest', () => {
           id: 'common_commands',
           source: {
             type: 'templateDir' as const,
-            fromDir: 'templates/agents/{{AGENT}}/commands/base',
+            fromDir: 'templates/agents/{{AGENT}}/commands/os-mac',
             toDir: '{{AGENT_COMMANDS_DIR}}',
           },
         },

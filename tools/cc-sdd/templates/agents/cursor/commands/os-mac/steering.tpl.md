@@ -1,31 +1,32 @@
----
+<meta>
 description: Create or update Kiro steering documents intelligently based on project state
-allowed-tools: Bash, Read, Write, Edit, MultiEdit, Glob, Grep, LS
----
+</meta>
 
 # Kiro Steering Management
 
 Intelligently create or update steering documents in `{{KIRO_DIR}}/steering/` to maintain accurate project knowledge for spec-driven development. This command detects existing documents and handles them appropriately.
 
+Tool policy: Use Cursor file tools (read_file/list_dir/glob_file_search/apply_patch/edit_file); no shell.
+
 ## Existing Files Check
 
 ### Current steering documents status
-- Product overview: !`bash -lc 'set -Eeuo pipefail; IFS=$"\n\t"; shopt -u histexpand; [ -f "{{KIRO_DIR}}/steering/product.md" ] && echo "✅ EXISTS - Will be updated preserving custom content" || echo "📝 Not found - Will be created"'`
-- Technology stack: !`bash -lc 'set -Eeuo pipefail; IFS=$"\n\t"; shopt -u histexpand; [ -f "{{KIRO_DIR}}/steering/tech.md" ] && echo "✅ EXISTS - Will be updated preserving custom content" || echo "📝 Not found - Will be created"'`
-- Project structure: !`bash -lc 'set -Eeuo pipefail; IFS=$"\n\t"; shopt -u histexpand; [ -f "{{KIRO_DIR}}/steering/structure.md" ] && echo "✅ EXISTS - Will be updated preserving custom content" || echo "📝 Not found - Will be created"'`
-- Custom steering files: !`bash -lc 'set -Eeuo pipefail; IFS=$"\n\t"; shopt -u histexpand; if [ -d "{{KIRO_DIR}}/steering" ]; then count=$(find "{{KIRO_DIR}}/steering" -maxdepth 1 -type f -name "*.md" -not -name "product.md" -not -name "tech.md" -not -name "structure.md" | grep -c .); if [ "$count" -gt 0 ]; then echo "🔧 $count custom file(s) found - Will be preserved"; else echo "📋 No custom files"; fi; else echo "📋 No steering directory yet"; fi'`
+- Product overview: Check `{{KIRO_DIR}}/steering/product.md` via read_file; create if missing
+- Technology stack: Check `{{KIRO_DIR}}/steering/tech.md` via read_file; create if missing
+- Project structure: Check `{{KIRO_DIR}}/steering/structure.md` via read_file; create if missing
+- Custom steering files: Discover via list_dir/glob_file_search in `{{KIRO_DIR}}/steering` excluding core files; preserve if present
 
 ## Project Analysis
 
 ### Current Project State
-- Project files: !`bash -lc 'set -Eeuo pipefail; IFS=$"\n\t"; shopt -u histexpand; find . -path ./node_modules -prune -o -path ./.git -prune -o -path ./dist -prune -o -type f \( -name "*.py" -o -name "*.js" -o -name "*.ts" -o -name "*.jsx" -o -name "*.tsx" -o -name "*.java" -o -name "*.go" -o -name "*.rs" \) -print 2>/dev/null || echo "No source files found"'`
-- Configuration files: !`bash -lc 'set -Eeuo pipefail; IFS=$"\n\t"; shopt -u histexpand; find . -maxdepth 3 \( -name "package.json" -o -name "requirements.txt" -o -name "pom.xml" -o -name "Cargo.toml" -o -name "go.mod" -o -name "pyproject.toml" -o -name "tsconfig.json" \) 2>/dev/null || echo "No config files found"'`
-- Documentation: !`bash -lc 'set -Eeuo pipefail; IFS=$"\n\t"; shopt -u histexpand; find . -maxdepth 3 -path ./node_modules -prune -o -path ./.git -prune -o -path "./{{KIRO_DIR}}" -prune -o \( -name "README*" -o -name "CHANGELOG*" -o -name "LICENSE*" -o -name "*.md" \) -print 2>/dev/null || echo "No documentation files found"'`
+- Project files: Discover via glob_file_search while excluding common vendor dirs; summarize by type
+- Configuration files: Discover typical configs via glob_file_search (e.g. `package.json`, `requirements.txt`, `pyproject.toml`, `tsconfig.json`, etc.)
+- Documentation: Discover markdown/docs via list_dir/glob_file_search (exclude vendor dirs)
 
 ### Recent Changes (if updating)
-- Last steering update: !`bash -lc 'set -Eeuo pipefail; IFS=$"\n\t"; shopt -u histexpand; git log -1 --oneline -- "{{KIRO_DIR}}/steering/" 2>/dev/null || echo "No previous steering commits"'`
-- Commits since last steering update: !`bash -lc 'set -Eeuo pipefail; IFS=$"\n\t"; shopt -u histexpand; LAST_COMMIT=$(git log -1 --format=%H -- "{{KIRO_DIR}}/steering/" 2>/dev/null); if [ -n "$LAST_COMMIT" ]; then git log --oneline "${LAST_COMMIT}..HEAD" --max-count=20 2>/dev/null || echo "Not a git repository"; else echo "No previous steering update found"; fi'`
-- Working tree status: !`bash -lc 'set -Eeuo pipefail; IFS=$"\n\t"; shopt -u histexpand; git status --porcelain 2>/dev/null || echo "Not a git repository"'`
+- Last steering update: `git log -1 --oneline -- {{KIRO_DIR}}/steering/ 2>/dev/null || echo "No previous steering commits"`
+- Commits since last steering update: `LAST_COMMIT=$(git log -1 --format=%H -- {{KIRO_DIR}}/steering/ 2>/dev/null); if [ -n "$LAST_COMMIT" ]; then git log --oneline ${LAST_COMMIT}..HEAD --max-count=20 2>/dev/null || echo "Not a git repository"; else echo "No previous steering update found"; fi`
+- Working tree status: `git status --porcelain 2>/dev/null || echo "Not a git repository"`
 
 ### Existing Documentation
 - Main README: @README.md
@@ -168,3 +169,4 @@ If custom steering files exist:
 - **Explain changes**: Brief notes on why something was updated
 
 The goal is to maintain living documentation that stays current while respecting user customizations, supporting effective spec-driven development without requiring users to worry about losing their work.
+ultrathink

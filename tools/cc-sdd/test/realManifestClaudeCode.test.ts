@@ -57,7 +57,7 @@ describe('real claude-code manifest', () => {
     const cmd = join(cwd, '.claude/commands/kiro/spec-init.md');
     expect(await exists(cmd)).toBe(true);
 
-    expect(ctx.logs.join('\n')).toMatch(/Applied plan:/);
+    expect(ctx.logs.join('\n')).toMatch(/Setup completed ✅/);
   });
 });
 
@@ -89,6 +89,6 @@ describe('real claude-code manifest (linux)', () => {
     const cmd = join(cwd, '.claude/commands/kiro/spec-init.md');
     expect(await exists(cmd)).toBe(true);
 
-    expect(ctx.logs.join('\n')).toMatch(/Applied plan:/);
+    expect(ctx.logs.join('\n')).toMatch(/Setup completed ✅/);
   });
 });

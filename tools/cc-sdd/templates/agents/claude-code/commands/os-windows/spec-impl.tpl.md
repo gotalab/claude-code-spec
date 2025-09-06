@@ -1,42 +1,23 @@
 ---
 description: Execute spec tasks using TDD methodology
 allowed-tools: Bash, Read, Write, Edit, MultiEdit, Grep, Glob, LS, WebFetch
-argument-hint: <feature-name> <task-numbers>
+argument-hint: <feature-name> [task-numbers]
 ---
 
 # Execute Spec Tasks with TDD
 
-Execute implementation tasks from spec using Kent Beck's Test-Driven Development methodology.
-
-## Arguments: $ARGUMENTS
-
-## Current Specs
-Available specs: !`bash -c 'ls {{KIRO_DIR}}/specs/ 2>/dev/null || echo "No specs found"'`
+Execute implementation tasks for **$1** using Kent Beck's Test-Driven Development methodology.
 
 ## Instructions
 
-### Help Mode (--help)
-If arguments contain "--help", show usage:
-```
-/kiro:spec-impl <feature-name> <task-numbers>
-
-Examples:
-  /kiro:spec-impl auth-system 1.1            # Execute task 1.1
-  /kiro:spec-impl auth-system 1,2,3          # Execute tasks 1, 2, 3
-  /kiro:spec-impl auth-system --all          # Execute all pending tasks
-```
-
 ### Pre-Execution Validation
-Feature name: !`bash -c 'echo "$ARGUMENTS" | awk "{print \\$1}"'`
-
-Validate required files exist:
-- Requirements: !`bash -c 'FEATURE=$(echo "$ARGUMENTS" | awk "{print \\$1}"); [ -n "$FEATURE" ] && [ -f "{{KIRO_DIR}}/specs/$FEATURE/requirements.md" ] && echo "Found" || echo "Missing"'`
-- Design: !`bash -c 'FEATURE=$(echo "$ARGUMENTS" | awk "{print \\$1}"); [ -n "$FEATURE" ] && [ -f "{{KIRO_DIR}}/specs/$FEATURE/design.md" ] && echo "Found" || echo "Missing"'`
-- Tasks: !`bash -c 'FEATURE=$(echo "$ARGUMENTS" | awk "{print \\$1}"); [ -n "$FEATURE" ] && [ -f "{{KIRO_DIR}}/specs/$FEATURE/tasks.md" ] && echo "Found" || echo "Missing"'`
-- Metadata: !`bash -c 'FEATURE=$(echo "$ARGUMENTS" | awk "{print \\$1}"); [ -n "$FEATURE" ] && [ -f "{{KIRO_DIR}}/specs/$FEATURE/spec.json" ] && echo "Found" || echo "Missing"'`
+Validate required files exist for feature **$1**:
+- Requirements: `{{KIRO_DIR}}/specs/$1/requirements.md`
+- Design: `{{KIRO_DIR}}/specs/$1/design.md`  
+- Tasks: `{{KIRO_DIR}}/specs/$1/tasks.md`
+- Metadata: `{{KIRO_DIR}}/specs/$1/spec.json`
 
 ### Context Loading
-**Load all required content before execution:**
 
 **Core Steering:**
 - Structure: @{{KIRO_DIR}}/steering/structure.md
@@ -44,77 +25,38 @@ Validate required files exist:
 - Product: @{{KIRO_DIR}}/steering/product.md
 
 **Custom Steering:**
-Additional files: !`bash -c 'find {{KIRO_DIR}}/steering -name "*.md" ! -name "structure.md" ! -name "tech.md" ! -name "product.md" 2>/dev/null || echo "None"'`
+- Additional `*.md` files in `{{KIRO_DIR}}/steering/` (excluding structure.md, tech.md, product.md)
 
-**Spec Documents:**
-Feature directory: !`bash -c 'echo "$ARGUMENTS" | awk "{print \\$1}"'`
-- Requirements: @{{KIRO_DIR}}/specs/[FEATURE]/requirements.md
-- Design: @{{KIRO_DIR}}/specs/[FEATURE]/design.md
-- Tasks: @{{KIRO_DIR}}/specs/[FEATURE]/tasks.md
-
-**Note**: [FEATURE] will be replaced with actual feature name during execution
+**Spec Documents for $1:**
+- Metadata: @{{KIRO_DIR}}/specs/$1/spec.json
+- Requirements: @{{KIRO_DIR}}/specs/$1/requirements.md
+- Design: @{{KIRO_DIR}}/specs/$1/design.md
+- Tasks: @{{KIRO_DIR}}/specs/$1/tasks.md
 
 ### Task Execution
-1. **Parse feature name and task numbers** from arguments
-2. **Load all context** (steering + spec documents)
-3. **Extract checkboxes** from tasks.md: !`bash -c 'FEATURE=$(echo "$ARGUMENTS" | awk "{print \\$1}"); [ -n "$FEATURE" ] && grep -n "^- \\\\[ \\\\]\\\\|^- \\\\[x\\\\]" {{KIRO_DIR}}/specs/$FEATURE/tasks.md || echo "No feature specified"'`
-4. **Execute each checkbox** using TDD methodology directly
+1. **Feature**: $1  
+2. **Task numbers**: $2 (optional, defaults to all pending tasks)
+3. **Load all context** (steering + spec documents)
+4. **Execute selected tasks** using TDD methodology
 
-### For Each Task Checkbox
-Execute using TDD methodology directly:
+### TDD Implementation
+For each selected task:
 
-**Implementation Steps:**
-1. **Load Project Context** (read these files first):
-   - Structure: {{KIRO_DIR}}/steering/structure.md  
-   - Tech Stack: {{KIRO_DIR}}/steering/tech.md
-   - Product: {{KIRO_DIR}}/steering/product.md
-   - Custom steering files: !`bash -c 'find {{KIRO_DIR}}/steering -name "*.md" ! -name "structure.md" ! -name "tech.md" ! -name "product.md" 2>/dev/null || echo "None"'`
-   - Spec Metadata: {{KIRO_DIR}}/specs/[FEATURE]/spec.json
-   - Requirements: {{KIRO_DIR}}/specs/[FEATURE]/requirements.md
-   - Design: {{KIRO_DIR}}/specs/[FEATURE]/design.md
-   - All Tasks: {{KIRO_DIR}}/specs/[FEATURE]/tasks.md
+1. **RED**: Write failing tests first
+2. **GREEN**: Write minimal code to pass tests  
+3. **REFACTOR**: Clean up and improve code structure
+4. **Verify**: 
+   - All tests pass
+   - No regressions in existing tests
+   - Code quality and test coverage maintained
+5. **Mark Complete**: Update checkbox from `- [ ]` to `- [x]` in tasks.md
 
-2. **TDD Implementation** for each specific task:
-   - **RED**: Write failing tests first
-   - **GREEN**: Write minimal code to pass tests
-   - **REFACTOR**: Clean up and improve code structure
+**Note**: Follow Kent Beck's TDD methodology strictly, implementing only the specific task requirements.
 
-3. **Task Completion**:
-   - Verify all tests pass
-   - Update checkbox from `- [ ]` to `- [x]` in {{KIRO_DIR}}/specs/[FEATURE]/tasks.md
-   - Ensure no regressions in existing tests
+## Implementation Notes
 
-**For each task:**
-- Extract exact checkbox content from tasks.md
-- Follow Kent Beck's TDD methodology strictly
-- Implement only the specific task requirements
-- Maintain code quality and test coverage
-
-## Implementation Logic
-
-1. **Parse Arguments**:
-   - Feature name: First argument
-   - Task numbers: Second argument (support: "1", "1,2,3", "--all")
-
-2. **Validate**:
-   - Spec directory exists
-   - Required files (requirements.md, design.md, tasks.md, spec.json) exist
-   - Spec is approved for implementation
-
-3. **Execute**:
-   - **Load all file contents** into memory first
-   - **Build complete context** for implementation
-   - **Execute each task sequentially** using TDD methodology
-   - Each task implementation receives complete project knowledge
-
-## Error Handling
-
-- Spec not found: Run /kiro:spec-init first
-- Not approved: Complete spec workflow first
-- Task failure: Keep checkbox unchecked, show error
-
-## Success Metrics
-
-- All selected checkboxes marked [x] in tasks.md
-- Tests pass
-- No regressions
+- **Feature**: Use `$1` for feature name
+- **Tasks**: Use `$2` for specific task numbers (optional)
+- **Validation**: Check all required spec files exist
+- **TDD Focus**: Always write tests before implementation
+- **Task Tracking**: Update checkboxes in tasks.md as completed

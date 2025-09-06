@@ -8,7 +8,7 @@
         "fromDir": "templates/agents/{{AGENT}}/commands/os-mac",
         "toDir": "{{AGENT_COMMANDS_DIR}}"
       },
-      "when": { "agent": "gemini-cli", "os": ["mac", "linux"] }
+      "when": { "agent": "gemini-cli", "os": ["mac"] }
     },
     {
       "id": "commands_os_windows",
@@ -17,7 +17,7 @@
         "fromDir": "templates/agents/{{AGENT}}/commands/os-windows",
         "toDir": "{{AGENT_COMMANDS_DIR}}"
       },
-      "when": { "agent": "gemini-cli", "os": "windows" }
+      "when": { "agent": "gemini-cli", "os": ["windows", "linux"] }
     },
     {
       "id": "doc_main",

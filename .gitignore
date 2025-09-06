@@ -79,5 +79,6 @@ docs/kiro/prompt/
 # Agent configurations
 .claude/agents/
 .claude/hooks/
+# .claude/commands/utils/
 GEMINI.md
 AGENTS.md

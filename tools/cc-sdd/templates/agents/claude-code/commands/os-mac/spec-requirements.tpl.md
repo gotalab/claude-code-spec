@@ -6,7 +6,7 @@ argument-hint: <feature-name>
 
 # Requirements Generation
 
-Generate comprehensive requirements for feature: **$ARGUMENTS**
+Generate comprehensive requirements for feature: **$1**
 
 ## Context Validation
 
@@ -17,13 +17,17 @@ Generate comprehensive requirements for feature: **$ARGUMENTS**
 - Custom steering: Load all "Always" mode custom steering files from {{KIRO_DIR}}/steering/
 
 ### Existing Spec Context
-- Current spec directory: !`ls -la {{KIRO_DIR}}/specs/$ARGUMENTS/`
-- Current requirements: @{{KIRO_DIR}}/specs/$ARGUMENTS/requirements.md
-- Spec metadata: @{{KIRO_DIR}}/specs/$ARGUMENTS/spec.json
+- Current spec directory: !`ls -la {{KIRO_DIR}}/specs/$1/`
+- Current requirements: `{{KIRO_DIR}}/specs/$1/requirements.md`
+- Spec metadata: `{{KIRO_DIR}}/specs/$1/spec.json`
 
 ## Task: Generate Initial Requirements
 
-Generate an initial set of requirements in EARS format based on the feature idea, then iterate with the user to refine them until they are complete and accurate.
+### 1. Read Existing Requirements Template
+Read the existing requirements.md file created by spec-init to extract the project description.
+
+### 2. Generate Complete Requirements
+Generate an initial set of requirements in EARS format based on the project description, then iterate with the user to refine them until they are complete and accurate.
 
 Don't focus on code exploration in this phase. Instead, just focus on writing requirements which will later be turned into a design.
 
@@ -33,7 +37,7 @@ Don't focus on code exploration in this phase. Instead, just focus on writing re
 3. **No Sequential Questions**: Generate initial version first, then iterate based on user feedback
 4. **Keep It Manageable**: Create a solid foundation that can be expanded through user review
 
-### 1. EARS Format Requirements
+### 3. EARS Format Requirements
 
 **EARS (Easy Approach to Requirements Syntax)** is the mandatory format for acceptance criteria:
 
@@ -47,8 +51,8 @@ Don't focus on code exploration in this phase. Instead, just focus on writing re
 - WHEN [event] AND [additional condition] THEN [system] SHALL [response]
 - IF [condition] AND [additional condition] THEN [system] SHALL [response]
 
-### 2. Requirements Document Structure
-Generate requirements.md in the language specified in spec.json (check `@{{KIRO_DIR}}/specs/$ARGUMENTS/spec.json` for "language" field):
+### 4. Requirements Document Structure
+Update requirements.md with complete content in the language specified in spec.json (check `{{KIRO_DIR}}/specs/$1/spec.json` for "language" field):
 
 ```markdown
 # Requirements Document
@@ -79,7 +83,7 @@ This section should have EARS requirements
 [Continue pattern for all major functional areas]
 ```
 
-### 3. Update Metadata
+### 5. Update Metadata
 Update spec.json with:
 ```json
 {
@@ -94,7 +98,7 @@ Update spec.json with:
 }
 ```
 
-### 4. Document Generation Only
+### 6. Document Generation Only
 Generate the requirements document content ONLY. Do not include any review or approval instructions in the actual document file.
 
 ---
@@ -104,7 +108,7 @@ Generate the requirements document content ONLY. Do not include any review or ap
 After generating requirements.md, review the requirements and choose:
 
 **If requirements look good:**
-Run `/kiro:spec-design $ARGUMENTS -y` to proceed to design phase
+Run `/kiro:spec-design $1 -y` to proceed to design phase
 
 **If requirements need modification:**
 Request changes, then re-run this command after modifications

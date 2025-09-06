@@ -14,7 +14,7 @@ Generate comprehensive requirements for feature: **{{args}}**
 - Custom steering: Load all "Always" mode custom steering files from {{KIRO_DIR}}/steering/
 
 ### Existing Spec Context
-- Current spec directory: !{ls -la {{KIRO_DIR}}/specs/{{args}}/}
+- Current spec directory: !{bash -c 'ls -la {{KIRO_DIR}}/specs/{{args}}/'}
 - Current requirements: @{{KIRO_DIR}}/specs/{{args}}/requirements.md
 - Spec metadata: @{{KIRO_DIR}}/specs/{{args}}/spec.json
 

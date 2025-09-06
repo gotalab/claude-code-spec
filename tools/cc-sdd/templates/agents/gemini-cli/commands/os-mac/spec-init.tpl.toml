@@ -11,16 +11,16 @@ Initialize a new specification based on the provided project description:
 
 **SCOPE**: This command initializes the directory structure and metadata based on the detailed project description provided.
 
-### 1. Generate Feature Name in English
+### 1. Generate Feature Name
 Create a concise, descriptive feature name from the project description ({{args}}).
 **Check existing `{{KIRO_DIR}}/specs/` directory to ensure the generated feature name is unique. If a conflict exists, append a number suffix (e.g., feature-name-2).**
 
 ### 2. Create Spec Directory
-Create `{{KIRO_DIR}}/specs/{generated-feature-name}/` directory with template files:
-- `requirements.md` - Empty template for user stories
-- `design.md` - Empty template for technical design  
-- `tasks.md` - Empty template for implementation tasks
+Create `{{KIRO_DIR}}/specs/[generated-feature-name]/` directory with:
 - `spec.json` - Metadata and approval tracking
+- `requirements.md` - Lightweight template with project description
+
+**Note**: design.md and tasks.md will be created by their respective commands during the development process.
 
 ### 3. Initialize spec.json Metadata
 Create initial metadata with approval tracking:
@@ -49,38 +49,16 @@ Create initial metadata with approval tracking:
 }
 ```
 
-### 4. Create Template Files with Project Context
-
-#### requirements.md (Template)
+### 4. Create Requirements Template
+Create requirements.md with project description:
 ```markdown
 # Requirements Document
 
-## Overview
-<!-- Project overview will be generated in /kiro:spec-requirements phase -->
-
-## Project Description (User Input)
+## Project Description (Input)
 {{args}}
 
 ## Requirements
-<!-- Detailed user stories will be generated in /kiro:spec-requirements phase -->
-
-```
-
-#### design.md (Empty Template)
-```markdown
-# Design Document
-
-## Overview
-<!-- Technical design will be generated after requirements approval -->
-
-```
-
-#### tasks.md (Empty Template)
-```markdown
-# Implementation Plan
-
-<!-- Implementation tasks will be generated after design approval -->
-
+<!-- Will be generated in /kiro:spec-requirements phase -->
 ```
 
 ### 5. Update GEMINI.md Reference
@@ -88,12 +66,20 @@ Add the new spec to the active specifications list with the generated feature na
 
 ## Next Steps After Initialization
 
-Follow the spec-driven development workflow:
-1. `/kiro:spec-requirements {feature-name}` - Generate requirements
-2. `/kiro:spec-design {feature-name}` - Generate design (interactive approval)
-3. `/kiro:spec-tasks {feature-name}` - Generate tasks (interactive approval)
-4. **Use specified language** - Set language to {{LANG_CODE}} in metadata
-5. **Verify structure** - Confirm all files are created correctly
+Follow the strict spec-driven development workflow:
+1. **`/kiro:spec-requirements [feature-name]`** - Create and generate requirements.md
+2. **`/kiro:spec-design [feature-name]`** - Create and generate design.md (requires approved requirements)
+3. **`/kiro:spec-tasks [feature-name]`** - Create and generate tasks.md (requires approved design)
 
-Initialize the specification structure to enable the systematic spec-driven development workflow.
+**Important**: Each phase creates its respective file and requires approval before proceeding to the next phase.
+
+## Output Format
+
+After initialization, provide:
+1. Generated feature name and rationale
+2. Brief project summary
+3. Created spec.json path
+4. **Clear next step**: `/kiro:spec-requirements [feature-name]`
+5. Explanation that only spec.json was created, following stage-by-stage development principles
+
 """

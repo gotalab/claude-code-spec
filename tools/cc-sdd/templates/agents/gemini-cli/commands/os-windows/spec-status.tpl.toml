@@ -8,15 +8,15 @@ Show current status and progress for feature: **{{args}}**
 ## Spec Context
 
 ### Spec Files
-- Spec directory: !{ls -la {{KIRO_DIR}}/specs/{{args}}/}
+- Spec directory: !{bash -c 'ls -la {{KIRO_DIR}}/specs/{{args}}/'}
 - Spec metadata: @{{KIRO_DIR}}/specs/{{args}}/spec.json
 - Requirements: @{{KIRO_DIR}}/specs/{{args}}/requirements.md
 - Design: @{{KIRO_DIR}}/specs/{{args}}/design.md
 - Tasks: @{{KIRO_DIR}}/specs/{{args}}/tasks.md
 
 ### All Specs Overview
-- Available specs: !{ls -la {{KIRO_DIR}}/specs/}
-- Active specs: !{find {{KIRO_DIR}}/specs/ -name "spec.json" -exec grep -l "implementation_ready.*true" {} +}
+- Available specs: !{bash -c 'ls -la {{KIRO_DIR}}/specs/'}
+- Active specs: !{bash -c 'find {{KIRO_DIR}}/specs/ -name "spec.json" -exec grep -l "implementation_ready.*true" {} +'}
 
 ## Task: Generate Status Report
 

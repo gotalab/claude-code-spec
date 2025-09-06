@@ -8,7 +8,7 @@ Execute implementation tasks from spec using Kent Beck's Test-Driven Development
 ## Arguments: {{args}}
 
 ## Current Specs
-Available specs: !{ls {{KIRO_DIR}}/specs/ 2>/dev/null || echo "No specs found"}
+Available specs: !{bash -c 'ls {{KIRO_DIR}}/specs/ 2>/dev/null || echo "No specs found"'}
 
 ## Instructions
 

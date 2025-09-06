@@ -8,12 +8,12 @@ Create custom steering documents in `{{KIRO_DIR}}/steering/` for specialized con
 ## Current Steering Status
 
 ### Existing Steering Documents
-- Core steering files: !{ls -la {{KIRO_DIR}}/steering/*.md 2>/dev/null || echo "No steering directory found"}
-- Custom steering count: !{find {{KIRO_DIR}}/steering -maxdepth 1 -name '*.md' ! -name 'product.md' ! -name 'tech.md' ! -name 'structure.md' 2>/dev/null | wc -l || echo "0"}
+- Core steering files: !{bash -c 'ls -la {{KIRO_DIR}}/steering/*.md 2>/dev/null || echo "No steering directory found"'}
+- Custom steering count: !{bash -c 'find {{KIRO_DIR}}/steering -maxdepth 1 -name '"'"'*.md'"'"' ! -name '"'"'product.md'"'"' ! -name '"'"'tech.md'"'"' ! -name '"'"'structure.md'"'"' 2>/dev/null | wc -l || echo "0"'}
 
 ### Project Analysis
-- Specialized areas: !{find . -name "test*" -o -name "spec*" -o -name "api" -o -name "auth" -o -name "security" 2>/dev/null || echo "No specialized directories found"}
-- Config patterns: !{find . -name "*.config.*" -o -name "*rc.*" -o -name ".*rc" 2>/dev/null || echo "No config files found"}
+- Specialized areas: !{bash -c 'find . -name "test*" -o -name "spec*" -o -name "api" -o -name "auth" -o -name "security" 2>/dev/null || echo "No specialized directories found"'}
+- Config patterns: !{bash -c 'find . -name "*.config.*" -o -name "*rc.*" -o -name ".*rc" 2>/dev/null || echo "No config files found"'}
 
 ## Task: Create Custom Steering Document
 

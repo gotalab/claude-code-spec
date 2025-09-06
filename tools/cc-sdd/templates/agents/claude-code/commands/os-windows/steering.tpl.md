@@ -13,7 +13,7 @@ Intelligently create or update steering documents in `{{KIRO_DIR}}/steering/` to
 - Product overview: !`bash -c '[ -f "{{KIRO_DIR}}/steering/product.md" ] && echo "✅ EXISTS - Will be updated preserving custom content" || echo "📝 Not found - Will be created"'`
 - Technology stack: !`bash -c '[ -f "{{KIRO_DIR}}/steering/tech.md" ] && echo "✅ EXISTS - Will be updated preserving custom content" || echo "📝 Not found - Will be created"'`
 - Project structure: !`bash -c '[ -f "{{KIRO_DIR}}/steering/structure.md" ] && echo "✅ EXISTS - Will be updated preserving custom content" || echo "📝 Not found - Will be created"'`
-- Custom steering files: !`bash -c 'if [ -d "{{KIRO_DIR}}/steering" ]; then count=$(find {{KIRO_DIR}}/steering -maxdepth 1 -type f -name '"'"'*.md'"'"' ! -name '"'"'product.md'"'"' ! -name '"'"'tech.md'"'"' ! -name '"'"'structure.md'"'"' | grep -c .); if [ "$count" -gt 0 ]; then echo "🔧 $count custom file(s) found - Will be preserved"; else echo "📋 No custom files"; fi; else echo "📋 No steering directory yet"; fi'`
+- Custom steering files: !`bash -c 'if [ -d "{{KIRO_DIR}}/steering" ]; then count=$(find {{KIRO_DIR}}/steering -maxdepth 1 -type f -name "*.md" ! -name "product.md" ! -name "tech.md" ! -name "structure.md" | grep -c .); if [ "$count" -gt 0 ]; then echo "🔧 $count custom file(s) found - Will be preserved"; else echo "📋 No custom files"; fi; else echo "📋 No steering directory yet"; fi'`
 
 ## Project Analysis
 
@@ -168,3 +168,4 @@ If custom steering files exist:
 - **Explain changes**: Brief notes on why something was updated
 
 The goal is to maintain living documentation that stays current while respecting user customizations, supporting effective spec-driven development without requiring users to worry about losing their work.
+ultrathink

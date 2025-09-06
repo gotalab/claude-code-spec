@@ -1,11 +1,20 @@
-description = "Create technical design for a specification"
+<meta>
+description: Create comprehensive technical design for a specification  
+argument-hint: [feature-name] [-y]
+</meta>
 
-prompt = """
 # Technical Design
 
-Create comprehensive technical design for feature: **{{args}}**
+Generate a **technical design document** for feature **[feature-name]**.
+
+**CRITICAL**: Generate COMPLETE content without abbreviations, placeholders ("...", "[details]"), or omissions. Continue until all sections are fully written.
 
 ## Task: Create Technical Design Document
+
+Tool policy: Use Cursor file tools (read_file/list_dir/glob_file_search/apply_patch/edit_file); no shell.
+
+Prime: Always perform Discovery & Analysis first, then construct the design document.
+Process Reminder: Reference discovery findings throughout Overview/Architecture/Components/Testing; if unknowns remain, note "Pending discovery: ..." and avoid assumptions.
 
 ### 1. Prerequisites & File Handling
 - **Requirements Approval Check**: 
@@ -17,7 +26,7 @@ Create comprehensive technical design for feature: **{{args}}**
     - **[o] Overwrite**: Generate completely new design document
     - **[m] Merge**: Generate new design document using existing content as reference context  
     - **[c] Cancel**: Stop execution for manual review
-- **Context Loading**: Read `.kiro/specs/{{args}}/requirements.md`, core steering documents, and existing design.md (if merge mode)
+- **Context Loading**: Read `{{KIRO_DIR}}/specs/[feature-name]/requirements.md`, core steering documents, and existing design.md (if merge mode)
 
 ### 2. Discovery & Analysis Phase
 
@@ -48,9 +57,9 @@ Create comprehensive technical design for feature: **{{args}}**
 **Optional for completely new features**: Review existing patterns for consistency and reuse opportunities
 
 #### C. Steering Alignment Check
-- Verify alignment with core steering documents (`structure.md`, `tech.md`, `product.md`) and any custom steering files
-  - **Core steering**: @.kiro/steering/structure.md, @.kiro/steering/tech.md, @.kiro/steering/product.md
-  - **Custom steering**: All additional `.md` files in `.kiro/steering/` directory (e.g., `api.md`, `testing.md`, `security.md`)
+- Verify alignment with core steering documents (`structure.md`, `tech.md`, `product.md`) and any custom steering files (`*.md`) in `{{KIRO_DIR}}/steering/`
+  - **Core steering**: @{{KIRO_DIR}}/steering/structure.md, @{{KIRO_DIR}}/steering/tech.md, @{{KIRO_DIR}}/steering/product.md
+  - **Custom steering**: All additional `.md` files in `{{KIRO_DIR}}/steering/` discovered via list_dir or glob_file_search (excluding `structure.md`, `tech.md`, `product.md`). Do not run shell commands.
 - Document deviations with rationale for steering updates
 
 #### D. Technology & Alternative Analysis
@@ -87,6 +96,7 @@ Create comprehensive technical design for feature: **{{args}}**
 ## Design Document Structure & Guidelines
 
 ### Core Principles
+- **Complete output**: Write all sections fully - never abbreviate or use ellipsis
 - **Review-optimized structure**: Critical technical decisions prominently placed to prevent oversight
 - **Contextual relevance**: Include sections only when applicable to project type and scope
 - **Visual-first design**: Essential Mermaid diagrams for architecture and data flow
@@ -418,19 +428,21 @@ Error tracking, logging, and health monitoring implementation.
 - Exclude all styling elements (no style definitions, classDef, fill colors)
 - Avoid visual customization (backgrounds, custom CSS)
 - Example: `graph TB` → `A[Login] --> B[Dashboard]` → `B --> C[Settings]`
+- Use simple alphanumeric labels for nodes/participants; avoid parentheses, commas, slashes, quotes, and other special characters in labels.
+- Prefer short labels without punctuation, e.g., write "Nextjs React TS" instead of "Next.js (React, TypeScript)".
 
 ### Quality Checklist
 - [ ] Requirements covered with traceability
 - [ ] Existing implementation respected
 - [ ] Steering compliant, deviations documented
 - [ ] Architecture visualized with clear diagrams
-- [ ] Components have Purpose, Key Features, Interface Design
+- [ ] Components and Interfaces have Purpose, Key Features, Interface Design
 - [ ] Data models individually documented
 - [ ] Integration with existing system explained
 
 ### 3. Design Document Generation & Metadata Update
-- Generate complete design document following structure guidelines
-- Update `@.kiro/specs/{{args}}/spec.json`:
+- Generate complete design document following structure guidelines (no omissions or placeholders)
+- Update `{{KIRO_DIR}}/specs/[feature-name]/spec.json`:
 ```json
 {
   "phase": "design-generated", 
@@ -441,17 +453,22 @@ Error tracking, logging, and health monitoring implementation.
   "updated_at": "current_timestamp"
 }
 ```
+JSON update: update via file tools, set ISO `updated_at`, merge only needed keys; avoid duplicates.
+
+Final Reminder: Do not skip discovery.
 
 ### Actionable Messages
 If requirements are not approved and no `-y` flag:
-- **Error Message**: "Requirements must be approved before generating design. Run `/kiro:spec-requirements {{args}}` to review requirements, then run `/kiro:spec-design {{args}} -y` to proceed."
-- **Alternative**: "Or run `/kiro:spec-design {{args}} -y` to auto-approve requirements and generate design."
+- **Error Message**: "Requirements must be approved before generating design. Run `/kiro/spec-requirements [feature-name]` to review requirements, then run `/kiro/spec-design [feature-name] -y` to proceed."
+- **Alternative**: "Or run `/kiro/spec-design [feature-name] -y` to auto-approve requirements and generate design."
 
 ### Conversation Guidance
 After generation:
 - Guide user to review design narrative and visualizations
 - Suggest specific diagram additions if needed
-- Direct to run `/kiro:spec-tasks {{args}} -y` when approved
+- Direct to run `/kiro/spec-tasks [feature-name] -y` when approved
 
-Create design document that tells complete story through clear narrative, structured components, and effective visualizations. think deeply
-"""
+Create design document that tells complete story through clear narrative, structured components, and effective visualizations.
+
+**BEFORE FINISHING**: Verify all sections are complete, no placeholders used, and spec.json is updated. 
+think deeply

@@ -1,132 +1,127 @@
 ---
 description: Generate implementation tasks for a specification
-allowed-tools: Bash, Read, Write, Edit, Update, MultiEdit
+allowed-tools: Read, Write, Edit, MultiEdit, Glob, Grep
 argument-hint: <feature-name> [-y]
 ---
 
 # Implementation Tasks
 
-Generate detailed implementation tasks for feature: **$ARGUMENTS**
+Generate detailed implementation tasks for feature: **$1**
 
-## Requirements & Design Approval Required
+## Task: Generate Implementation Tasks
 
-**CRITICAL**: Tasks can only be generated after both requirements and design are reviewed and approved.
+### Prerequisites & Context Loading
+- If invoked with `-y` flag ($2 == "-y"): Auto-approve requirements and design in `spec.json`
+- Otherwise: Stop if requirements/design missing or unapproved with message:
+  "Run `/kiro:spec-requirements` and `/kiro:spec-design` first, or use `-y` flag to auto-approve"
+- If tasks.md exists: Prompt [o]verwrite/[m]erge/[c]ancel
 
-- Requirements document: @{{KIRO_DIR}}/specs/$ARGUMENTS/requirements.md
-- Design document: @{{KIRO_DIR}}/specs/$ARGUMENTS/design.md
-- Spec metadata: @{{KIRO_DIR}}/specs/$ARGUMENTS/spec.json
+**Context Loading (Full Paths)**:
+1. `{{KIRO_DIR}}/specs/$1/requirements.md` - Feature requirements (EARS format)
+2. `{{KIRO_DIR}}/specs/$1/design.md` - Technical design document
+3. `{{KIRO_DIR}}/steering/` - Project-wide guidelines and constraints:
+   - **Core files (always load)**:
+     - @{{KIRO_DIR}}/steering/product.md - Business context, product vision, user needs
+     - @{{KIRO_DIR}}/steering/tech.md - Technology stack, frameworks, libraries
+     - @{{KIRO_DIR}}/steering/structure.md - File organization, naming conventions, code patterns
+   - **Custom steering files** (load all EXCEPT "Manual" mode in `AGENTS.md`):
+     - Any additional `*.md` files in `{{KIRO_DIR}}/steering/` directory
+     - Examples: `api.md`, `testing.md`, `security.md`, etc.
+   - (Task planning benefits from comprehensive context)
+4. `{{KIRO_DIR}}/specs/$1/tasks.md` - Existing tasks (only if merge mode)
 
-**Note**: If this command was called with `-y` flag, both requirements and design are auto-approved (spec.json updated to set requirements.approved=true and design.approved=true). Otherwise, both phases must be approved first via their respective commands followed by `/kiro:spec-tasks $ARGUMENTS -y`.
+### CRITICAL Task Numbering Rules (MUST FOLLOW)
 
-## Context Analysis
+**⚠️ MANDATORY: Sequential major task numbering & hierarchy limits**
+- Major tasks: 1, 2, 3, 4, 5... (MUST increment sequentially)
+- Sub-tasks: 1.1, 1.2, 2.1, 2.2... (reset per major task)
+- **Maximum 2 levels of hierarchy** (no 1.1.1 or deeper)
+- Format exactly as:
+```markdown
+- [ ] 1. Major task description
+  - [ ] 1.1 Sub-task description
+    - Detail item 1
+    - Detail item 2
+    - _Requirements: X.X, Y.Y_
 
-### Complete Spec Context (APPROVED)
-- Requirements: @{{KIRO_DIR}}/specs/$ARGUMENTS/requirements.md
-- Design: @{{KIRO_DIR}}/specs/$ARGUMENTS/design.md
-- Current tasks: @{{KIRO_DIR}}/specs/$ARGUMENTS/tasks.md
-- Spec metadata: @{{KIRO_DIR}}/specs/$ARGUMENTS/spec.json
+  - [ ] 1.2 Sub-task description
+    - Detail items...
+    - _Requirements: X.X_
 
-### Steering Context
-- Architecture patterns: @{{KIRO_DIR}}/steering/structure.md
-- Development practices: @{{KIRO_DIR}}/steering/tech.md
-- Product constraints: @{{KIRO_DIR}}/steering/product.md
-- Custom steering: Load "Always" mode and task-related "Conditional" mode files
+- [ ] 2. Next major task (NOT 1 again!)
+  - [ ] 2.1 Sub-task...
+```
 
-## Task: Generate Code-Generation Prompts
+### Task Generation Rules
 
-**Prerequisites Verified**: Both requirements and design are approved and ready for task breakdown.
+1. **Natural language descriptions**: Focus on capabilities and outcomes, not code structure
+   - Describe **what functionality to achieve**, not file locations or code organization
+   - Specify **business logic and behavior**, not method signatures or type definitions
+   - Reference **features and capabilities**, not class names or API contracts
+   - Use **domain language**, not programming constructs
+   - **Avoid**: File paths, function/method names, type signatures, class/interface names, specific data structures
+   - **Include**: User-facing functionality, business rules, system behaviors, data relationships
+   - Implementation details (files, methods, types) come from design.md
+2. **Task integration & progression**:
+   - Each task must build on previous outputs (no orphaned code)
+   - End with integration tasks to wire everything together
+   - No hanging features - every component must connect to the system
+   - Incremental complexity - no big jumps between tasks
+   - Validate core functionality early in the sequence
+3. **Flexible task sizing**:
+   - Major tasks: As many sub-tasks as logically needed
+   - Sub-tasks: 1-3 hours each, 3-10 details per sub
+   - Group by cohesion, not arbitrary numbers
+   - Balance between too granular and too broad
+4. **Requirements mapping**: End details with `_Requirements: X.X, Y.Y_` or `_Requirements: [description]_`
+5. **Code-only focus**: Include ONLY coding/testing tasks, exclude deployment/docs/user testing
 
-**CRITICAL**: Convert the feature design into a series of prompts for a code-generation LLM that will implement each step in a test-driven manner. Prioritize best practices, incremental progress, and early testing, ensuring no big jumps in complexity at any stage.
-
-Create implementation plan in the language specified in spec.json:
-
-### 1. Code-Generation Tasks Structure
-Create tasks.md in the language specified in spec.json (check `@{{KIRO_DIR}}/specs/$ARGUMENTS/spec.json` for "language" field):
-
-**Note**: The example below is for format reference only. Actual content should be based on the specific requirements and design documents for your project.
+### Example Structure (FORMAT REFERENCE ONLY)
 
 ```markdown
 # Implementation Plan
 
-- [ ] 1. Set up project structure and core configuration
-  - Create Node.js project with TypeScript configuration
-  - Set up Express server with basic middleware
-  - Configure PostgreSQL and Redis connections
-  - Set up environment configuration and secrets management
+- [ ] 1. Set up project foundation and infrastructure
+  - Initialize project with required technology stack
+  - Configure server infrastructure and request handling
+  - Establish data storage and caching layer
+  - Set up configuration and environment management
   - _Requirements: All requirements need foundational setup_
 
-- [ ] 2. Implement authentication and user management
-- [ ] 2.1 Create user authentication system
-  - Implement User model with validation
-  - Create JWT token generation and validation utilities
-  - Build user registration and login endpoints
-  - Write unit tests for authentication logic
-  - _Requirements: 7.1, 7.2_
+- [ ] 2. Build authentication and user management system
+  - [ ] 2.1 Implement core authentication functionality
+    - Set up user data storage with validation rules
+    - Implement secure authentication mechanism
+    - Build user registration functionality
+    - Add login and session management features
+    - _Requirements: 7.1, 7.2_
 
-- [ ] 2.2 Implement email account connection system
-  - Create EmailAccount model with encrypted credential storage
-  - Implement OAuth 2.0 flow for Gmail and Outlook
-  - Build IMAP/SMTP credential validation
-  - Create email account management endpoints
-  - Write tests for account connection flows
-  - _Requirements: 5.1, 5.2, 5.4_
-
-... (Continue with additional phases: API layer, frontend, integration testing, etc.)
+  - [ ] 2.2 Enable email service integration
+    - Implement secure credential storage system
+    - Build authentication flow for email providers
+    - Create email connection validation logic
+    - Develop email account management features
+    - _Requirements: 5.1, 5.2, 5.4_
 ```
 
-**Task Structure Requirements:**
-- Use section headers to group related functionality (## [Functional Area])
-- Use flat numbering within sections: Major tasks (1, 2, 3) and sub-tasks (1.1, 1.2)
-- Avoid "Phase X:" prefixes, use functional section names instead
-- Each task should have 3-5 sub-items maximum
-- Keep tasks completable in 1-2 hours
-- Order by technical dependencies: Each task should build on outputs from previous tasks
-- Each task explains how it connects to subsequent tasks
-- **MUST end with exact format**: _Requirements: X.X, Y.Y_ or _Requirements: [description]_ (underscores mandatory)
-- Rely on design document for implementation details
+### Requirements Coverage Check
+- **MANDATORY**: Ensure ALL requirements from requirements.md are covered
+- Cross-reference every requirement ID with task mappings
+- If gaps found: Return to requirements or design phase
+- No requirement should be left without corresponding tasks
 
-### 2. Focus on Coding Activities Only
-**INCLUDE:** Any task that involves writing, modifying, or testing code
-**EXCLUDE:** User testing, deployment, metrics gathering, CI/CD setup, documentation creation
-
-### 3. Granular Requirements Mapping
-**MANDATORY FORMAT**: Each task must end with _Requirements: [mapping]_
-- **Primary format**: _Requirements: 2.1, 3.3, 1.2_ for specific EARS requirements (most common)
-- **Generalized mapping**: _Requirements: All requirements need foundational setup_ for cross-cutting tasks
-- **End-to-end tasks**: _Requirements: All requirements need E2E validation_ for comprehensive testing
-- Must use exact format with underscores
-- Ensure every EARS requirement is covered by implementation tasks
-
-
-### 4. Document Generation Only
-Generate the tasks document content ONLY. Do not include any review or approval instructions in the actual document file.
-
-### 5. Update Metadata
-
-Update spec.json with:
-```json
-{
-  "phase": "tasks-generated",
-  "approvals": {
-    "requirements": {
-      "generated": true,
-      "approved": true
-    },
-    "design": {
-      "generated": true,
-      "approved": true
-    },
-    "tasks": {
-      "generated": true,
-      "approved": false
-    }
-  },
-  "updated_at": "current_timestamp"
-}
-```
-
-### 8. Metadata Update
-Update the tracking metadata to reflect task generation completion.
+### Document Generation
+- Generate `{{KIRO_DIR}}/specs/$1/tasks.md` using the exact numbering format above
+- **Language**: Use language from `spec.json.language` field, default to English
+- **Task descriptions**: Use natural language for "what to do" (implementation details in design.md)
+ - Update `{{KIRO_DIR}}/specs/$1/spec.json`:
+  - Set `phase: "tasks-generated"`
+  - Set approvals map exactly as:
+    - `approvals.tasks = { "generated": true, "approved": false }`
+  - Preserve existing metadata (e.g., `language`), do not remove unrelated fields
+  - If invoked with `-y` flag: ensure the above approval booleans are applied even if previously unset/false
+  - Set `updated_at` to current ISO8601 timestamp
+  - Use file tools only (no shell commands)
 
 ---
 
@@ -149,51 +144,34 @@ Tasks represent the final planning phase - implementation can begin once tasks a
 **Final approval process for implementation**:
 ```
 📋 Tasks review completed. Ready for implementation.
-📄 Generated: {{KIRO_DIR}}/specs/feature-name/tasks.md
+📄 Generated: {{KIRO_DIR}}/specs/$1/tasks.md
 ✅ All phases approved. Implementation can now begin.
 ```
 
+### Next Steps: Implementation
+Once tasks are approved, start implementation:
+```bash
+/kiro:spec-impl $1          # Execute all pending tasks
+/kiro:spec-impl $1 1.1      # Execute specific task
+/kiro:spec-impl $1 1,2,3    # Execute multiple tasks
+```
+
+**Implementation Tips**:
+- Use `/clear` if conversation becomes too long, then continue with spec commands
+- All spec files ({{KIRO_DIR}}/specs/) are preserved and will be reloaded as needed
+
 ### Review Checklist (for user reference):
-- [ ] Tasks are properly sized (2-4 hours each)
+- [ ] Tasks are properly sized (1-3 hours each)
 - [ ] All requirements are covered by tasks
 - [ ] Task dependencies are correct
 - [ ] Technology choices match the design
 - [ ] Testing tasks are included
 
-## Instructions
+### Implementation Instructions
+When tasks are approved, the implementation phase begins:
+1. Work through tasks sequentially
+2. Mark tasks as completed in tasks.md
+3. Each task should produce working, tested code
+4. Commit code after each major task completion
 
-### Core Task Generation
-1. **Check spec.json for language** - Use the language specified in the metadata
-2. **Convert design into code-generation prompts** - Each task must be a specific coding instruction
-3. **Assume context availability** - All context documents (requirements.md, design.md) will be available during implementation
-4. **Specify exact files and components** - Define what code to write/modify in which files
-5. **Build incrementally** - Each task uses outputs from previous tasks, no orphaned code
-6. **Map to requirements** - End each task with _Requirements: X.X, Y.Y_ or _Requirements: [description]_ format
-
-### Implementation Strategy
-7. **Prioritize early validation** - Sequence steps to validate core functionality early through code
-8. **Apply test-driven approach** - Integrate testing into each development task
-9. **Order by technical dependencies** - Ensure each task can execute using outputs from previous tasks
-10. **Size appropriately** - Each task should be completable in 1-3 hours
-
-### Strict Coding-Only Focus
-**INCLUDE only tasks involving:**
-- Writing, modifying, or testing code
-- Creating automated tests
-- Implementing specific functions or components
-
-**EXCLUDE all non-coding activities:**
-- User acceptance testing or feedback gathering
-- Deployment to production/staging environments
-- Performance metrics gathering or analysis
-- Running the application manually for end-to-end testing
-- User training or documentation creation
-- Business process or organizational changes
-- Marketing or communication activities
-- Any task that cannot be completed through code modification
-
-### Completion
-11. **Update tracking metadata** upon completion - Set phase to "tasks-generated"
-
-Generate step-by-step implementation tasks executable by a coding agent.
 think deeply

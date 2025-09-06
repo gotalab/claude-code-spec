@@ -27,7 +27,6 @@ You will create a new custom steering document based on user requirements. Commo
    - REST/GraphQL conventions
    - Error handling patterns
    - Authentication/authorization approaches
-   - Rate limiting and pagination
    - API versioning strategy
 
 2. **Testing Approach** (`testing.md`)
@@ -84,7 +83,7 @@ Choose the inclusion mode based on how frequently and in what context this steer
 
 ### 2. Conditional Inclusion (Recommended for most custom files)  
 - **When to use**: Domain-specific guidelines for particular file types or directories
-- **File patterns**: "*.test.js", "src/api/**/*", "**/auth/*", "*.config.*"
+- **File patterns**: `"*.test.js"`, `"src/api/**/*"`, `"**/auth/*"`, `"*.config.*"`
 - **Example**: `testing-approach.md` only loads when editing test files
 - **Benefits**: Relevant context without overwhelming general interactions
 

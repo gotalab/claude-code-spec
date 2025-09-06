@@ -8,22 +8,22 @@ Intelligently create or update steering documents in `{{KIRO_DIR}}/steering/` to
 ## Existing Files Check
 
 ### Current steering documents status
-- Product overview: !{[ -f "{{KIRO_DIR}}/steering/product.md" ] && echo "✅ EXISTS - Will be updated preserving custom content" || echo "📝 Not found - Will be created"}
-- Technology stack: !{[ -f "{{KIRO_DIR}}/steering/tech.md" ] && echo "✅ EXISTS - Will be updated preserving custom content" || echo "📝 Not found - Will be created"}
-- Project structure: !{[ -f "{{KIRO_DIR}}/steering/structure.md" ] && echo "✅ EXISTS - Will be updated preserving custom content" || echo "📝 Not found - Will be created"}
-- Custom steering files: !{find {{KIRO_DIR}}/steering -maxdepth 1 -name '*.md' ! -name 'product.md' ! -name 'tech.md' ! -name 'structure.md' 2>/dev/null && echo "🔧 Custom files found - Will be preserved" || echo "📋 No custom files"}
+- Product overview: !{bash -c '[ -f "{{KIRO_DIR}}/steering/product.md" ] && echo "✅ EXISTS - Will be updated preserving custom content" || echo "📝 Not found - Will be created"'}
+- Technology stack: !{bash -c '[ -f "{{KIRO_DIR}}/steering/tech.md" ] && echo "✅ EXISTS - Will be updated preserving custom content" || echo "📝 Not found - Will be created"'}
+- Project structure: !{bash -c '[ -f "{{KIRO_DIR}}/steering/structure.md" ] && echo "✅ EXISTS - Will be updated preserving custom content" || echo "📝 Not found - Will be created"'}
+- Custom steering files: !{bash -c 'find {{KIRO_DIR}}/steering -maxdepth 1 -name '"'"'*.md'"'"' ! -name '"'"'product.md'"'"' ! -name '"'"'tech.md'"'"' ! -name '"'"'structure.md'"'"' 2>/dev/null && echo "🔧 Custom files found - Will be preserved" || echo "📋 No custom files"'}
 
 ## Project Analysis
 
 ### Current Project State
-- Project files: !{find . -name "*.py" -o -name "*.js" -o -name "*.ts" -o -name "*.jsx" -o -name "*.tsx" -o -name "*.java" -o -name "*.go" -o -name "*.rs" 2>/dev/null || echo "No source files found"}
-- Configuration files: !{find . -maxdepth 3 -name "package.json" -o -name "requirements.txt" -o -name "pom.xml" -o -name "Cargo.toml" -o -name "go.mod" -o -name "pyproject.toml" -o -name "tsconfig.json" 2>/dev/null || echo "No config files found"}
-- Documentation: !{find . -maxdepth 3 -name "README*" -o -name "CHANGELOG*" -o -name "LICENSE*" -o -name "*.md" 2>/dev/null || echo "No documentation files found"}
+- Project files: !{bash -c 'find . -name "*.py" -o -name "*.js" -o -name "*.ts" -o -name "*.jsx" -o -name "*.tsx" -o -name "*.java" -o -name "*.go" -o -name "*.rs" 2>/dev/null || echo "No source files found"'}
+- Configuration files: !{bash -c 'find . -maxdepth 3 -name "package.json" -o -name "requirements.txt" -o -name "pom.xml" -o -name "Cargo.toml" -o -name "go.mod" -o -name "pyproject.toml" -o -name "tsconfig.json" 2>/dev/null || echo "No config files found"'}
+- Documentation: !{bash -c 'find . -maxdepth 3 -name "README*" -o -name "CHANGELOG*" -o -name "LICENSE*" -o -name "*.md" 2>/dev/null || echo "No documentation files found"'}
 
 ### Recent Changes (if updating)
-- Last steering update: !{git log -1 --oneline -- {{KIRO_DIR}}/steering/ 2>/dev/null || echo "No previous steering commits"}
-- Commits since last steering update: !{git log --oneline --max-count=20 2>/dev/null || echo "Not a git repository"}
-- Working tree status: !{git status --porcelain 2>/dev/null || echo "Not a git repository"}
+- Last steering update: !{bash -c 'git log -1 --oneline -- {{KIRO_DIR}}/steering/ 2>/dev/null || echo "No previous steering commits"'}
+- Commits since last steering update: !{bash -c 'git log --oneline --max-count=20 2>/dev/null || echo "Not a git repository"'}
+- Working tree status: !{bash -c 'git status --porcelain 2>/dev/null || echo "Not a git repository"'}
 
 ### Existing Documentation
 - Main README: @README.md

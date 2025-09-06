@@ -161,7 +161,24 @@ export const runCli = async (
         templatesRoot: execOpts?.templatesRoot,
         onConflict,
       });
-      io.log(`Applied plan: written=${res.written}, skipped=${res.skipped}`);
+      io.log(`✅ Setup completed: written=${res.written}, skipped=${res.skipped}`);
+      
+      // Show agent-specific usage instructions
+      switch (resolved.agent) {
+        case 'claude-code':
+          io.log('\n🚀 Try: \x1b[36m/kiro:spec-init [your feature description or what to build]\x1b[0m to get started!');
+          break;
+        case 'gemini-cli':
+          io.log('\n🚀 Try: \x1b[36mgemini /kiro:spec-init [your feature description or what to build]\x1b[0m to get started!');
+          break;
+        case 'cursor':
+          io.log('\x1b[93m\x1b[1mRecommended model: claude-4-sonnet or later with thinking mode\x1b[0m');
+          io.log('\n🚀 Try: Open Cursor panel and use \x1b[36m /kiro/spec-init [your feature description or what to build]\x1b[0m commands to get started!');
+          break;
+        case 'qwen-code':
+          io.log('\n🚀 Try: Use \x1b[36m/kiro:spec-init [your feature description]\x1b[0m to get started!');
+          break;
+      }
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
       io.error(`Error: ${msg}`);

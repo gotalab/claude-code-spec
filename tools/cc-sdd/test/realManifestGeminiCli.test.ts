@@ -52,7 +52,7 @@ describe('real gemini-cli manifest (mac)', () => {
     const cmd = join(cwd, '.gemini/commands/kiro/spec-init.toml');
     expect(await exists(cmd)).toBe(true);
 
-    expect(ctx.logs.join('\n')).toMatch(/Applied plan:/);
+    expect(ctx.logs.join('\n')).toMatch(/Setup completed ✅/);
   });
 });
 
@@ -83,7 +83,7 @@ describe('real gemini-cli manifest (linux)', () => {
     const cmd = join(cwd, '.gemini/commands/kiro/spec-init.toml');
     expect(await exists(cmd)).toBe(true);
 
-    expect(ctx.logs.join('\n')).toMatch(/Applied plan:/);
+    expect(ctx.logs.join('\n')).toMatch(/Setup completed ✅/);
   });
 });
 
