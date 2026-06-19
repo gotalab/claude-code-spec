@@ -10,7 +10,9 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - Add `/kiro-getspecs` brownfield bootstrap skill across all 8 Agent Skills platforms: reverse-engineer existing codebases into `.kiro/` steering, `roadmap.md`, and spec seeds (`brief.md`, `spec.json`, `requirements.md` stub) without bypassing cc-sdd phase gates ([#176](https://github.com/gotalab/cc-sdd/pull/176))
-- Add [Brownfield getSpecs guide](docs/guides/brownfield-getspecs.md) and handoff updates for `kiro-spec-init`, `kiro-spec-batch`, `kiro-discovery`, and `kiro-spec-requirements`
+- Add Claude Code handoff parity for brownfield bootstrap (`kiro-discovery`, `kiro-spec-init`, `kiro-spec-batch`, `kiro-spec-requirements`, `kiro-validate-gap`)
+- Align Claude `kiro-getspecs` with platform-native skill format (`disable-model-invocation`, `allowed-tools`, step-based structure)
+- Mirror brownfield docs in JA skill reference and package README (ja/zh); fix EN seed contract wording ([#176](https://github.com/gotalab/cc-sdd/pull/176))
 
 ## [3.0.2] - 2026-04-14
 

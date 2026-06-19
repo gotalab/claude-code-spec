@@ -24,7 +24,7 @@ If steering/spec context is already available from conversation, skip redundant 
 Otherwise, load all necessary context:
 - Read `{{KIRO_DIR}}/specs/{feature}/spec.json` for language and metadata
 - Read `{{KIRO_DIR}}/specs/{feature}/brief.md` if it exists (discovery context: problem, approach, scope decisions, boundary candidates)
-- Read `{{KIRO_DIR}}/specs/{feature}/requirements.md` for project description
+- Read `{{KIRO_DIR}}/specs/{feature}/requirements.md` for project description (if missing but `brief.md` exists — typical getSpecs seed — synthesize project description from brief Problem/Current State/Desired Outcome before generating)
 - Core steering context: `product.md`, `tech.md`, `structure.md`
 - Additional steering files only when directly relevant to feature scope, user personas, business/domain rules, compliance/security constraints, operational constraints, or existing product boundaries
 - Relevant local agent skills or playbooks only when they clearly match the feature's host environment or use case and contain domain terminology or workflow rules that shape user-observable requirements

@@ -44,8 +44,8 @@ Use when the repo already has substantial code but `.kiro/` specs are missing or
 - What it does:
   - reverse-engineers stack, architecture, and module boundaries from code
   - writes or merges steering (`product.md`, `tech.md`, `structure.md`, `roadmap.md`)
-  - creates spec **seeds** only: `brief.md` + `spec.json` per slug
-  - does **not** write requirements, design, or tasks
+  - creates spec **seeds** only: `brief.md` + `spec.json` + `requirements.md` stub (project description only; EARS → `/kiro-spec-requirements`)
+  - does **not** write EARS requirements body, design, or tasks
 - Typical next step:
   - `/kiro-spec-requirements <slug>` for one seed
   - `/kiro-spec-batch` when roadmap lists multiple seeds

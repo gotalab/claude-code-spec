@@ -1,41 +1,42 @@
 ---
 name: kiro-getspecs
-description: Brownfield entry point for existing codebases. Reverse-engineers project structure into .kiro/ steering, roadmap, and spec seeds (brief.md + spec.json). Use when adopting cc-sdd on a project that has code but no specs, or when onboarding to an unfamiliar brownfield repo.
+description: Brownfield entry point for existing codebases. Reverse-engineers project structure into .kiro/ steering, roadmap, and spec seeds (brief.md + spec.json + requirements.md stub). Use when adopting cc-sdd on a project that has code but no specs.
+disable-model-invocation: true
+allowed-tools: Read, Write, Glob, Grep, Bash, Agent, WebSearch, WebFetch, AskUserQuestion
+argument-hint: [optional-focus-area]
 metadata:
   shared-rules: "getspecs-principles.md"
 ---
 
+# kiro-getspecs Skill
 
-# Get Specs (Brownfield Reverse Engineering)
+## Core Mission
+- **Role**: Bootstrap cc-sdd on brownfield (existing) projects without rewriting the codebase
+- **Mission**:
+  - Understand what the project already is (tech, architecture, modules, conventions)
+  - Materialize that understanding as durable `.kiro/` artifacts
+  - Propose natural spec boundaries as seeds — not full requirements yet
+- **Success Criteria**:
+  - Steering captures patterns and principles, not file catalogs
+  - Spec seeds have clear boundaries derived from code reality
+  - User can continue with `/kiro-spec-requirements` or `/kiro-spec-batch` without re-explaining the project
+  - No spec-kit / `.specify/` artifacts created
 
-<background_information>
-**Role**: Bootstrap cc-sdd on brownfield (existing) projects without rewriting the codebase.
+## When to Use
 
-**Mission**:
-- Understand what the project already is (tech, architecture, modules, conventions)
-- Materialize that understanding as durable `.kiro/` artifacts
-- Propose natural spec boundaries as seeds — not full requirements yet
-
-**Success Criteria**:
-- Steering captures patterns and principles, not file catalogs
-- Spec seeds have clear boundaries derived from code reality
-- User can continue with `/kiro-spec-requirements` or `/kiro-spec-batch` without re-explaining the project
-- No spec-kit / `.specify/` artifacts created
-
-**When to use instead of `/kiro-discovery`**:
+Use instead of `/kiro-discovery` when:
 - Project has substantial code but empty or missing `.kiro/specs/`
 - Team is adopting cc-sdd mid-flight on an existing repo
 - You need project memory and spec backlog from code, not from a new feature idea
 
-**When NOT to use**:
+Do **not** use when:
 - Greenfield new project → `/kiro-discovery` or `/kiro-spec-init`
 - Single small feature on a project that already has steering + specs → `/kiro-discovery`
 - You only need gap analysis for one existing spec → `/kiro-validate-gap`
-</background_information>
 
-<instructions>
+## Execution Steps
 
-## Phase 0: Gate and Scope
+### Step 1: Gate and Scope
 
 1. **Confirm brownfield intent**: Existing codebase with meaningful implementation (not empty scaffold).
 2. **Optional focus** ($ARGUMENTS): Module, domain, or area to prioritize when decomposing specs.
@@ -46,22 +47,22 @@ metadata:
 4. **Safety check**: If any spec has `spec.json` with `approvals.requirements.approved: true` or `approvals.design.approved: true`, list them and ask before overwriting or duplicating boundaries.
 5. **Proceed only after user confirms** (or user explicitly invoked the skill expecting writes).
 
-## Phase 1: Lite Scan (metadata only)
+### Step 2: Lite Scan (metadata only)
 
 Gather **metadata only**. Do NOT read full source files yet.
 
-- **Specs inventory**: List `{{KIRO_DIR}}/specs/*/spec.json` if any (name, phase, approvals)
+- **Specs inventory**: Glob `{{KIRO_DIR}}/specs/*/spec.json`, read each for name, phase, approvals
 - **Steering inventory**: Which files exist under `{{KIRO_DIR}}/steering/`
 - **Project root**: List top-level directories and key config files (package.json, pyproject.toml, go.mod, etc.)
 - **Git presence**: Check if `.git` exists (do not run destructive git commands)
 
 Note: `empty .kiro/` → full bootstrap; partial `.kiro/` → additive merge mode.
 
-## Phase 2: Reverse Analysis (delegate)
+### Step 3: Reverse Analysis (delegate)
 
 Read `references/analysis-guide.md` from this skill's directory for the analysis framework.
 
-**Spawn a sub-agent** (or execute sequentially if sub-agents unavailable) to analyze the codebase and return a structured summary **under 200 lines**:
+**Dispatch a subagent via Agent tool** (or execute sequentially if unavailable) to analyze the codebase and return a structured summary **under 200 lines**:
 
 1. Tech stack and versions (from config files, not guesses)
 2. Architecture pattern and layering
@@ -70,11 +71,11 @@ Read `references/analysis-guide.md` from this skill's directory for the analysis
 5. Candidate spec boundaries (natural seams for independent specs)
 6. Areas of high change risk or tight coupling
 
-**Context budget**: Sub-agent does heavy exploration; main context receives summary only.
+**Context budget**: Subagent does heavy exploration; main context receives summary only.
 
 If optional structural code graphs exist in the project (e.g. graphify), prefer them for module boundaries before broad file reads.
 
-## Phase 3: Git Forensics (when `.git` exists)
+### Step 4: Git Forensics (when `.git` exists)
 
 Run lightweight, read-only git inspection:
 
@@ -91,13 +92,13 @@ Extract:
 
 Use this to **prioritize spec seeds**, not to invent features that do not exist in code.
 
-## Phase 4: Steering Bootstrap
+### Step 5: Steering Bootstrap
 
-Load principles from `rules/getspecs-principles.md` in this skill's directory.
+Read `rules/getspecs-principles.md` from this skill's directory.
 
 **If steering is missing or incomplete**:
 1. Read templates from `{{KIRO_DIR}}/settings/templates/steering/` (product, tech, structure)
-2. Synthesize from Phase 2 summary + Phase 3 git signals
+2. Synthesize from Step 3 summary + Step 4 git signals
 3. Write `product.md`, `tech.md`, `structure.md` — **patterns and decisions**, not exhaustive lists
 
 **If steering already exists**:
@@ -105,13 +106,13 @@ Load principles from `rules/getspecs-principles.md` in this skill's directory.
 - Propose **additive** updates only; preserve user-authored sections
 - Report drift between steering and codebase; do not silently replace
 
-**Optional**: Write `roadmap.md` in Phase 5 instead of here if spec decomposition is not ready yet.
+**Optional**: Write `roadmap.md` in Step 6 instead of here if spec decomposition is not ready yet.
 
-## Phase 5: Roadmap and Spec Seeds
+### Step 6: Roadmap and Spec Seeds
 
 Read `references/spec-seed-template.md` from this skill's directory.
 
-### Decompose boundaries
+#### Decompose boundaries
 
 From analysis + git signals + optional `$ARGUMENTS` focus:
 
@@ -119,11 +120,11 @@ From analysis + git signals + optional `$ARGUMENTS` focus:
 - Target **3–8 spec seeds** for typical mid-size repos; fewer for small repos
 - Each seed must answer: what existing capability does this spec document/improve?
 
-### Write roadmap.md
+#### Write roadmap.md
 
 Use the full roadmap structure in `references/spec-seed-template.md` (aligned with `/kiro-discovery` Path D: Overview, Approach Decision, Scope, Constraints, Boundary Strategy, Specs).
 
-### Write each spec seed
+#### Write each spec seed
 
 For every slug under `## Specs (dependency order)`:
 
@@ -135,17 +136,17 @@ For every slug under `## Specs (dependency order)`:
    - Replace `{{FEATURE_NAME}}`, `{{TIMESTAMP}}`, `{{LANG_CODE}}`
    - Keep `phase: "initialized"` and all approvals `false`
 4. Write `requirements.md` **stub** from `{{KIRO_DIR}}/settings/templates/specs/requirements-init.md`:
-   - Replace `{{PROJECT_DESCRIPTION}}` with a synthesis from brief **Problem**, **Current State**, and **Desired Outcome** (who, situation, target state)
+   - Replace `{{PROJECT_DESCRIPTION}}` with a synthesis from brief **Problem**, **Current State**, and **Desired Outcome**
    - Leave the `## Requirements` section empty — EARS content is `/kiro-spec-requirements`
    - Do not set `approvals.requirements.generated` to true
 
 **Do NOT** generate EARS acceptance criteria — that is `/kiro-spec-requirements`.
 
-### Verify artifacts
+#### Verify artifacts
 
 Read back each written file (`steering/*`, `roadmap.md`, each seed's `brief.md`, `spec.json`, `requirements.md`). If any write failed, stop and report before handoff.
 
-## Phase 6: Handoff
+### Step 7: Handoff
 
 Present to user:
 
@@ -155,11 +156,9 @@ Present to user:
 4. **Next command** (choose one):
    - Single seed: `/kiro-spec-requirements <slug>`
    - Multiple seeds: `/kiro-spec-batch` (after reviewing briefs)
-   - Steering only: `/kiro-steering` when steering needs refinement before specs (existing core files trigger Sync Mode)
+   - Steering only: `/kiro-steering` when steering needs refinement before specs
 
 **CRITICAL**: All artifacts must be on disk before suggesting next commands. Conversation text does not survive session boundaries.
-
-</instructions>
 
 ## Output Description
 
@@ -181,7 +180,7 @@ Keep total output under 400 words. Details live on disk.
 | Templates missing | Report missing path under `{{KIRO_DIR}}/settings/templates/` |
 | Existing approved specs | Never overwrite; append roadmap items or propose new slugs |
 | Huge monolith (>15 seeds) | Propose phased roadmap; write top 5–8 seeds first; ask user to continue |
-| No git | Skip Phase 3; rely on structure analysis only |
+| No git | Skip Step 4; rely on structure analysis only |
 
 ## Relationship to Other Skills
 

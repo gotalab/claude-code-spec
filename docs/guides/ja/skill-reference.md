@@ -12,6 +12,7 @@ cc-sdd の Skills モード向けリファレンスである。`--claude-skills`
 
 | やりたいこと | 最初に使うもの | 次の典型アクション |
 | --- | --- | --- |
+| 既存コードに cc-sdd を導入したい（spec 未整備） | `/kiro-getspecs` | `/kiro-spec-requirements` または `/kiro-spec-batch` |
 | 新しい依頼を振り分けたい | `/kiro-discovery` | `kiro-spec-init`、`kiro-spec-batch`、または直接実装 |
 | 1つの新規 spec を作りたい | `/kiro-spec-init` | `/kiro-spec-requirements` |
 | 大きい構想を複数 spec に分けたい | `/kiro-spec-batch` | 生成された spec をレビューし、承認済みのものから進める |
@@ -35,6 +36,20 @@ cc-sdd の Skills モード向けリファレンスである。`--claude-skills`
   - spec 不要として直接実装する
   - 1つの新規 spec を作る
   - 複数 spec に分解する
+
+### `/kiro-getspecs`
+
+リポジトリに実装はあるが `.kiro/` spec が空または未整備の **brownfield bootstrap** 向け。
+
+- 役割:
+  - コードから stack・アーキテクチャ・モジュール境界を逆解析する
+  - steering（`product.md`, `tech.md`, `structure.md`, `roadmap.md`）を書くかマージする
+  - spec **seed** のみ作成: 各 slug ごとに `brief.md` + `spec.json` + `requirements.md` stub（プロジェクト説明のみ）
+  - EARS requirements 本文、`design.md`、`tasks.md` は書かない
+- 次の典型アクション:
+  - 1 seed: `/kiro-spec-requirements <slug>`
+  - 複数 seed: `/kiro-spec-batch`
+- 詳細: [Brownfield getSpecs ガイド](../brownfield-getspecs.md)（英語）
 
 ### `/kiro-spec-batch`
 
@@ -173,6 +188,7 @@ Skills モードはプロンプトを動的に生成するため、`.claude/agen
 
 | 領域 | Skills モード | レガシーコマンド |
 | --- | --- | --- |
+| 既存コードへの bootstrap | `/kiro-getspecs` | なし |
 | 新規 work の入口 | `/kiro-discovery` | なし |
 | 複数 spec の生成 | `/kiro-spec-batch` | なし |
 | 実装 | `/kiro-impl` | `/kiro:spec-impl` |

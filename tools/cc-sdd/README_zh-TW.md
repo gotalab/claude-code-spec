@@ -8,7 +8,7 @@
 <a href="./README.md">English</a> | <a href="./README_ja.md">日本語</a> | 繁體中文
 </sub></div>
 
-**把已核准規格轉成長時間自律實作工作流。** 單一指令將 agentic SDLC 工作流安裝為 Agent Skills: discovery, requirements, design, tasks 以及帶有任務級別 independent review 的自律實作。支援 8 個 AI coding agent，每個平台使用相同的 17-skill 套件。
+**把已核准規格轉成長時間自律實作工作流。** 單一指令將 agentic SDLC 工作流安裝為 Agent Skills: brownfield bootstrap, discovery, requirements, design, tasks 以及帶有任務級別 independent review 的自律實作。支援 8 個 AI coding agent，每個平台使用相同的 18-skill 套件。
 
 👻 **Kiro 風格。** Kiro IDE 的 spec-driven / agentic SDLC 風格。既有 Kiro 規格可直接使用。
 
@@ -16,11 +16,12 @@
 
 cc-sdd v3.0 是圍繞 Agent Skills 與長時間自律實作的重寫。
 
+- **`/kiro-getspecs` 用於 brownfield bootstrap。** 已有程式碼但缺少 `.kiro/` spec？從程式碼逆向生成 steering、roadmap 與 spec seed（`brief.md` + `spec.json` + `requirements.md` stub），再繼續 `/kiro-spec-requirements` 或 `/kiro-spec-batch`。詳見 [Brownfield guide](https://github.com/gotalab/cc-sdd/blob/main/docs/guides/brownfield-getspecs.md)。
 - **`/kiro-discovery` 作為新入口。** discovery 把新需求路由到「擴充既有 spec / 直接實作 / 建立一個新 spec / 拆成多個 spec / mixed decomposition」其中之一。它會寫入 `brief.md` 以及必要時的 `roadmap.md`，讓你可以在不重新說明 scope 的情況下恢復工作。
 - **`/kiro-impl` 執行長時間自律實作。** 每個任務由 fresh implementer 在 feature flag 後執行 TDD (RED → GREEN)，獨立的 reviewer 做機械驗證，失敗時由 auto-debug pass 在乾淨 context 中調查根本原因。任務間的知見透過 `tasks.md` 的 `## Implementation Notes` 傳給下一個 implementer。每次迭代處理 1 個任務，中斷後再執行也安全。
 - **邊界優先的 spec discipline。** `design.md` 新增 File Structure Plan，成為任務邊界的依據。任務帶有 `_Boundary:_` / `_Depends:_` 標註。review 與 validation 尋找邊界違規而非僅看風格。
 - **`/kiro-spec-batch` 支援多 spec initiative。** 從 roadmap 並行產生多個 spec，並執行 cross-spec review 以捕捉 spec 間矛盾、責務重複與介面不一致。
-- **Agent Skills 橫跨 8 個 AI coding agent。** 每次安裝 17 個 skills、按需載入（progressive disclosure）。Claude Code 與 Codex 為 stable；Cursor, Copilot, Windsurf, OpenCode, Gemini CLI, Antigravity 為 beta。零外部依賴，subagent 透過各平台原生 spawn 啟動。
+- **Agent Skills 橫跨 8 個 AI coding agent。** 每次安裝 18 個 skills、按需載入（progressive disclosure）。Claude Code 與 Codex 為 stable；Cursor, Copilot, Windsurf, OpenCode, Gemini CLI, Antigravity 為 beta。零外部依賴，subagent 透過各平台原生 spawn 啟動。
 
 Skills 模式完整工作流與 `/kiro-impl` 內部細節請參考 [Skill Reference](https://github.com/gotalab/cc-sdd/blob/main/docs/guides/skill-reference.md)。
 
@@ -98,7 +99,7 @@ spec 階段的典型產出（10 分鐘以內）:
 
 ## 支援的代理
 
-全部 8 個 skills variant 提供相同的 17-skill 套件。差異在於各平台整合累積了多少實戰驗證。
+全部 8 個 skills variant 提供相同的 18-skill 套件。差異在於各平台整合累積了多少實戰驗證。
 
 | 代理 | Skills 模式 | 穩定度 | 舊版模式 |
 |---|---|---|---|
@@ -112,7 +113,7 @@ spec 階段的典型產出（10 分鐘以內）:
 | **Antigravity** | `--antigravity` | Beta (experimental) | — |
 | **Qwen Code** | — | — | `--qwen` |
 
-這裡的 "Beta" 不代表「功能不完整」。所有 8 個平台共用相同的 17 skills 與模板。Beta 指的是平台整合（subagent spawn 行為、操作感、`SKILL.md` 載入）相較於 Claude Code 與 Codex 的實戰驗證較少，可能仍有邊界狀況。若遇到問題請至 [Issues](https://github.com/gotalab/cc-sdd/issues) 回報。
+這裡的 "Beta" 不代表「功能不完整」。所有 8 個平台共用相同的 18 skills 與模板。Beta 指的是平台整合（subagent spawn 行為、操作感、`SKILL.md` 載入）相較於 Claude Code 與 Codex 的實戰驗證較少，可能仍有邊界狀況。若遇到問題請至 [Issues](https://github.com/gotalab/cc-sdd/issues) 回報。
 
 ## 安裝詳情
 
@@ -166,14 +167,14 @@ npx cc-sdd@latest --kiro-dir docs
 ```
 project/
 # Skills 模式（建議）: 僅會安裝其中之一
-├── .claude/skills/           # 17 skills（Claude Code Skills，預設）
-├── .agents/skills/           # 17 skills（Codex Skills）
-├── .cursor/skills/           # 17 skills（Cursor Skills）
-├── .github/skills/           # 17 skills（GitHub Copilot Skills）
-├── .windsurf/skills/         # 17 skills（Windsurf Skills）
-├── .opencode/skills/         # 17 skills（OpenCode Skills）
-├── .gemini/skills/           # 17 skills（Gemini CLI Skills）
-├── .agent/skills/            # 17 skills（Antigravity Skills）
+├── .claude/skills/           # 18 skills（Claude Code Skills，預設）
+├── .agents/skills/           # 18 skills（Codex Skills）
+├── .cursor/skills/           # 18 skills（Cursor Skills）
+├── .github/skills/           # 18 skills（GitHub Copilot Skills）
+├── .windsurf/skills/         # 18 skills（Windsurf Skills）
+├── .opencode/skills/         # 18 skills（OpenCode Skills）
+├── .gemini/skills/           # 18 skills（Gemini CLI Skills）
+├── .agent/skills/            # 18 skills（Antigravity Skills）
 # 舊版指令模式（已棄用）
 ├── .claude/commands/kiro/    # 11 斜線指令（--claude）
 ├── .github/prompts/          # 11 提示指令（--copilot）
