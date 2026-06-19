@@ -22,6 +22,7 @@ Kiro-style Spec-Driven Development on an agentic SDLC
 
 ## Minimal Workflow
 - Phase 0 (optional): `/kiro-steering`, `/kiro-steering-custom`
+- **Brownfield bootstrap** (existing codebase, no `.kiro/` specs): `/kiro-getspecs` — reverse-engineers steering + roadmap + spec seeds from code; then `/kiro-spec-requirements` or `/kiro-spec-batch`
 - Discovery: `/kiro-discovery "idea"` — determines action path, writes brief.md + roadmap.md for multi-spec projects
 - Phase 1 (Specification):
   - Single spec: `/kiro-spec-quick {feature} [--auto]` or step by step:

@@ -13,6 +13,7 @@ Quick pointers to the most relevant guides, workflows, and historical notes for 
 
 - [Spec-Driven Development Workflow](guides/spec-driven.md) — how cc-sdd implements SDD end to end
 - [Skill Reference](guides/skill-reference.md) — skills-mode workflow, including `/kiro-impl` subagent flow
+- [Brownfield getSpecs](guides/brownfield-getspecs.md) — adopt cc-sdd on existing codebases with `/kiro-getspecs`
 - [Command Reference](guides/command-reference.md) — legacy `/kiro:*` command detail
 - [Customization Guide](guides/customization-guide.md) — templates and rules customization
 - [Why cc-sdd?](guides/why-cc-sdd.md) — design rationale, trade-offs, and when to use (or not use) the tool
