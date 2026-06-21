@@ -103,8 +103,8 @@ Provide output in the language specified in spec.json with:
 
 **If Gap Analysis Complete**:
 - Review gap analysis insights
-- Run `/kiro-spec-design $1` to create technical design document
-- Or `/kiro-spec-design $1 -y` to auto-approve requirements and proceed directly
+- Run `@kiro-spec-design $1` to create technical design document
+- Or `@kiro-spec-design $1 -y` to auto-approve requirements and proceed directly
 
 **Note**: Gap analysis is optional but recommended for brownfield projects to inform design decisions.
 
