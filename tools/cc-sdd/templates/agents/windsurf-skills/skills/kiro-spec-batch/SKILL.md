@@ -83,9 +83,9 @@ If multi-agent is not available, execute features in the wave sequentially.
 
 ## Step 4: Cross-Spec Review
 
-After all waves complete, spawn a **single sub-agent** for cross-spec consistency review. This is the highest-value quality gate -- it catches issues that per-spec review gates cannot.
+After all waves complete, spawn a **single sub-agent** for cross-spec consistency review. If sub-agent dispatch is not available on this platform, run the review steps inline in the main context. This is the highest-value quality gate -- it catches issues that per-spec review gates cannot.
 
-**Sub-agent task**:
+**Sub-agent / inline task**:
 
 Read ALL generated specs and check for consistency across the entire project:
 - `{{KIRO_DIR}}/specs/*/design.md` (primary: contains interfaces, data models, architecture)
@@ -109,8 +109,8 @@ Check:
 
 Output: CONSISTENT areas + ISSUES with (which specs, what's inconsistent, suggested fix).
 
-**After the review sub-agent returns**:
-- **Critical/important issues found**: Dispatch fix sub-agents for each affected spec to apply the suggested fixes. If the issue is really a decomposition problem (for example boundary overlap or one spec carrying multiple independent seams), stop and return to roadmap/discovery instead of papering over it locally. Re-run cross-spec review after fixes (max 3 remediation rounds).
+**After the review returns**:
+- **Critical/important issues found**: Dispatch fix sub-agents for each affected spec to apply the suggested fixes (or apply fixes inline if sub-agent dispatch is not available). If the issue is really a decomposition problem (for example boundary overlap or one spec carrying multiple independent seams), stop and return to roadmap/discovery instead of papering over it locally. Re-run cross-spec review after fixes (max 3 remediation rounds).
 - **Minor issues only**: Report them for user awareness, proceed to Step 5.
 - **No issues**: Proceed to Step 5.
 
