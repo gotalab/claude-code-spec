@@ -43,7 +43,7 @@ metadata:
    - Creates/updates: `{{KIRO_DIR}}/steering/{product,tech,structure,roadmap}.md`
    - Creates spec seeds: `{{KIRO_DIR}}/specs/<slug>/{spec.json,brief.md,requirements.md}` — `requirements.md` is **project-description stub only** (same as `@kiro-spec-init`), not EARS requirements
    - Does NOT create: EARS requirements body, `design.md`, `tasks.md`, `.specify/`
-4. **Safety check**: If any spec has `spec.json` with `approvals.requirements.approved: true` or `approvals.design.approved: true`, list them and ask before overwriting or duplicating boundaries.
+4. **Safety check**: Scan existing specs in `{{KIRO_DIR}}/specs/`. If any spec directory already exists (brief.md, spec.json), list them and ask before overwriting or duplicating boundaries — regardless of approval status. For approved specs, stop and ask which to keep untouched.
 5. **Proceed only after user confirms** (or user explicitly invoked the skill expecting writes).
 
 ## Phase 1: Lite Scan (metadata only)
@@ -179,7 +179,7 @@ Keep total output under 400 words. Details live on disk.
 | Empty repo / scaffold only | Stop: use `@kiro-discovery` greenfield path |
 | User declines writes | Report analysis only; no disk changes |
 | Templates missing | Report missing path under `{{KIRO_DIR}}/settings/templates/` |
-| Existing approved specs | Never overwrite; append roadmap items or propose new slugs |
+| Existing spec directories (draft or approved) | Never overwrite silently. List all existing specs, ask before adding seeds that overlap. Approved specs: stop and keep untouched. |
 | Huge monolith (>15 seeds) | Propose phased roadmap; write top 5–8 seeds first; ask user to continue |
 | No git | Skip Phase 3; rely on structure analysis only |
 
