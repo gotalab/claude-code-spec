@@ -16,7 +16,8 @@ Generate a unique feature name from the project description ($ARGUMENTS) and ini
 3. **Check Uniqueness / Brownfield seed**:
    - If the directory exists with `brief.md` and `spec.json` but **no** `requirements.md` (typical `@kiro-getspecs` seed): use that directory. Write `requirements.md` stub from `requirements-init.md` using the brief; **do not** recreate or overwrite `spec.json`. Stop after stub write.
    - If the directory exists with only `brief.md` (no `spec.json`, from `@kiro-discovery`): use that directory.
-   - If the directory exists with all three files: report conflict and ask whether to refresh the stub only.
+   - If the directory exists with all three files and requirements.md is a getSpecs stub (empty `## Requirements` section, no EARS acceptance criteria): treat as reusable seed. Skip initialization — brief, spec.json, and stub already exist. Report that seed is ready for requirements generation.
+   - If the directory exists with all three files (non-stub): report conflict and ask whether to refresh the stub only.
 4. **Create Directory**: `{{KIRO_DIR}}/specs/[feature-name]/` (skip if already exists from discovery or getSpecs)
 5. **Initialize Files Using Templates**:
    - Read `{{KIRO_DIR}}/settings/templates/specs/init.json`
