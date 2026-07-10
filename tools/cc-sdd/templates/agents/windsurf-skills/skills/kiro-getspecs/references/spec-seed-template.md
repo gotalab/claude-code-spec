@@ -93,4 +93,4 @@ Leave `## Requirements` as the template placeholder comment only.
 - [ ] slug-b -- one line. Dependencies: slug-a
 ```
 
-Mark `[x]` only when a spec has approved requirements (rare on first bootstrap).
+Mark `[x]` only when the spec is **fully batch-complete** (requirements + design + tasks present — same meaning as `kiro-spec-batch` skip). Leave `[ ]` for seeds and for specs that only have approved requirements; otherwise batch will skip them and never finish design/tasks.
