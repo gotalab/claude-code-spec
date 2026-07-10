@@ -159,6 +159,7 @@ describe('real antigravity-skills manifest', () => {
     expect(await exists(join(cwd, '.agent/skills/kiro-spec-requirements/rules/requirements-review-gate.md'))).toBe(true);
     expect(await exists(join(cwd, '.agent/skills/kiro-validate-gap/rules/gap-analysis.md'))).toBe(true);
     expect(await exists(join(cwd, '.agent/skills/kiro-steering/rules/steering-principles.md'))).toBe(true);
+    expect(await exists(join(cwd, '.agent/skills/kiro-getspecs/rules/getspecs-principles.md'))).toBe(true);
     expect(await exists(join(cwd, '.agent/skills/kiro-steering-custom/rules/steering-principles.md'))).toBe(true);
     expect(await exists(join(cwd, '.agent/skills/kiro-spec-tasks/rules/tasks-generation.md'))).toBe(true);
     expect(await exists(join(cwd, '.agent/skills/kiro-spec-tasks/rules/tasks-parallel-analysis.md'))).toBe(true);
@@ -191,7 +192,7 @@ describe('real antigravity-skills manifest', () => {
     expect(ctx.logs.join('\n')).toMatch(/\d+\/\d+ files written/);
   });
 
-  it('generates exactly 17 skill directories', async () => {
+  it('generates exactly 18 skill directories', async () => {
     const cwd = await mkTmp();
     const ctx = makeIO();
     await runCli(
@@ -204,6 +205,7 @@ describe('real antigravity-skills manifest', () => {
 
     const expectedSkills = [
       'kiro-discovery',
+      'kiro-getspecs',
       'kiro-spec-batch',
       'kiro-spec-init',
       'kiro-spec-quick',

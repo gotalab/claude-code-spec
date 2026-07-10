@@ -8,7 +8,7 @@
 English | <a href="./README_ja.md">日本語</a> | <a href="./README_zh-TW.md">繁體中文</a>
 </sub></div>
 
-**Turn approved specs into long-running autonomous implementation.** One command installs an agentic SDLC workflow as Agent Skills: discovery, requirements, design, tasks, and autonomous implementation with per-task independent review. Works across 8 AI coding agents, with the same 17-skill set on each.
+**Turn approved specs into long-running autonomous implementation.** One command installs an agentic SDLC workflow as Agent Skills: brownfield bootstrap, discovery, requirements, design, tasks, and autonomous implementation with per-task independent review. Works across 8 AI coding agents, with the same 18-skill set on each.
 
 👻 **Kiro-inspired.** Similar spec-driven, agentic SDLC style as Kiro IDE. Existing Kiro specs remain compatible and portable.
 
@@ -16,11 +16,12 @@ English | <a href="./README_ja.md">日本語</a> | <a href="./README_zh-TW.md">�
 
 cc-sdd v3.0 is a rework around Agent Skills and long-running autonomous implementation.
 
+- **`/kiro-getspecs` for brownfield bootstrap.** Existing codebase with no `.kiro/` specs? Reverse-engineer steering, roadmap, and spec seeds (`brief.md` + `spec.json` + `requirements.md` stub) from code — then continue with `/kiro-spec-requirements` or `/kiro-spec-batch`. See [Brownfield guide](https://github.com/gotalab/cc-sdd/blob/main/docs/guides/brownfield-getspecs.md).
 - **`/kiro-discovery` as the new entry point.** Discovery routes new work into one of: extend an existing spec, implement directly with no spec, create one new spec, decompose into multiple specs, or mixed decomposition. It writes `brief.md` and, when needed, `roadmap.md`, so you can resume a workstream without re-explaining scope.
 - **`/kiro-impl` for long-running autonomous implementation.** Each task gets a fresh implementer running TDD (RED → GREEN) behind a feature flag, an independent reviewer, and an auto-debug pass that investigates root causes in a clean context when the implementer is blocked or the reviewer rejects twice. Learnings from earlier tasks propagate forward via `## Implementation Notes` in `tasks.md`. 1 task per iteration, safe to re-run after interruption.
 - **Boundary-first spec discipline.** `design.md` now includes a File Structure Plan that drives task boundaries. Tasks carry `_Boundary:_` and `_Depends:_` annotations. Review and validation look for boundary violations, not just style issues.
 - **`/kiro-spec-batch` for multi-spec initiatives.** Turn a roadmap into multiple specs in parallel, with cross-spec review to catch contradictions, duplicated responsibilities, and interface mismatches.
-- **Agent Skills across 8 coding agents.** 17 skills per install, loaded on demand (progressive disclosure). Claude Code and Codex are stable; Cursor, Copilot, Windsurf, OpenCode, Gemini CLI, and Antigravity are in beta. No external dependencies; subagents are spawned through each platform's native primitive.
+- **Agent Skills across 8 coding agents.** 18 skills per install, loaded on demand (progressive disclosure). Claude Code and Codex are stable; Cursor, Copilot, Windsurf, OpenCode, Gemini CLI, and Antigravity are in beta. No external dependencies; subagents are spawned through each platform's native primitive.
 
 Full skills-mode workflow and `/kiro-impl` internals: [Skill Reference](https://github.com/gotalab/cc-sdd/blob/main/docs/guides/skill-reference.md).
 
@@ -55,7 +56,8 @@ Supports 8 AI coding agents (Claude Code and Codex stable; Cursor, Copilot, Wind
 Then, in your agent:
 
 ```bash
-/kiro-discovery <idea>
+/kiro-getspecs          # brownfield: existing code, no specs yet
+/kiro-discovery <idea>  # greenfield / new work routing
 ```
 
 Not sure where to start? Start with `kiro-discovery`. It routes your request and tells you what command to run next.
@@ -98,7 +100,7 @@ Then `/kiro-impl` runs the tasks autonomously with TDD (RED → GREEN) behind fe
 
 ## Supported Agents
 
-All 8 skills variants ship the same 17-skill set. The difference is how much real-world usage each platform integration has seen.
+All 8 skills variants ship the same 18-skill set. The difference is how much real-world usage each platform integration has seen.
 
 | Agent | Skills mode | Stability | Legacy mode |
 |---|---|---|---|
@@ -112,7 +114,7 @@ All 8 skills variants ship the same 17-skill set. The difference is how much rea
 | **Antigravity** | `--antigravity` | Beta (experimental) | — |
 | **Qwen Code** | — | — | `--qwen` |
 
-"Beta" does not mean "missing features", the 17 skills and templates are identical across all 8 platforms. It means the platform integration (subagent spawn behavior, ergonomics, `SKILL.md` loading) has had less real-world usage than Claude Code and Codex, and edge cases may still surface. Please [report issues](https://github.com/gotalab/cc-sdd/issues) if you hit any.
+"Beta" does not mean "missing features", the 18 skills and templates are identical across all 8 platforms. It means the platform integration (subagent spawn behavior, ergonomics, `SKILL.md` loading) has had less real-world usage than Claude Code and Codex, and edge cases may still surface. Please [report issues](https://github.com/gotalab/cc-sdd/issues) if you hit any.
 
 ## Installation details
 
@@ -166,14 +168,14 @@ After installation, your project gets:
 ```
 project/
 # Skills mode (recommended): one of the following is installed
-├── .claude/skills/           # 17 skills (Claude Code Skills, default)
-├── .agents/skills/           # 17 skills (Codex Skills)
-├── .cursor/skills/           # 17 skills (Cursor Skills)
-├── .github/skills/           # 17 skills (GitHub Copilot Skills)
-├── .windsurf/skills/         # 17 skills (Windsurf Skills)
-├── .opencode/skills/         # 17 skills (OpenCode Skills)
-├── .gemini/skills/           # 17 skills (Gemini CLI Skills)
-├── .agent/skills/            # 17 skills (Antigravity Skills)
+├── .claude/skills/           # 18 skills (Claude Code Skills, default)
+├── .agents/skills/           # 18 skills (Codex Skills)
+├── .cursor/skills/           # 18 skills (Cursor Skills)
+├── .github/skills/           # 18 skills (GitHub Copilot Skills)
+├── .windsurf/skills/         # 18 skills (Windsurf Skills)
+├── .opencode/skills/         # 18 skills (OpenCode Skills)
+├── .gemini/skills/           # 18 skills (Gemini CLI Skills)
+├── .agent/skills/            # 18 skills (Antigravity Skills)
 # Legacy command modes (deprecated)
 ├── .claude/commands/kiro/    # 11 slash commands (--claude)
 ├── .github/prompts/          # 11 prompt commands (--copilot)

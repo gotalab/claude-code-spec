@@ -31,7 +31,7 @@ description: Create complete specs (requirements, design, tasks) for all feature
    - `## Direct Implementation Candidates`
    Do not include these in dependency-wave execution; they are awareness-only inputs for sequencing and consistency review.
 4. For each pending feature in `## Specs (dependency order)`, verify `{{KIRO_DIR}}/specs/<feature>/brief.md` exists
-5. If any brief.md is missing, stop and report: "Missing brief.md for: [list]. Run `@kiro-discovery` to generate briefs first."
+5. If any brief.md is missing, stop and report: "Missing brief.md for: [list]. Run `@kiro-getspecs` (brownfield bootstrap) or `@kiro-discovery` to generate briefs first."
 
 ## Step 2: Build Dependency Waves
 
@@ -65,7 +65,7 @@ Create a complete specification for feature "{feature-name}".
 1. Read the brief at {{KIRO_DIR}}/specs/{feature-name}/brief.md for feature context
 2. Read the roadmap at {{KIRO_DIR}}/steering/roadmap.md for project context
 3. Execute the full spec pipeline. For each phase, read the corresponding skill's SKILL.md for complete instructions (templates, rules, review gates):
-   a. Initialize: Read .windsurf/skills@kiro-spec-init/SKILL.md, then create spec.json and requirements.md
+   a. Initialize: Read `.windsurf/skills@kiro-spec-init/SKILL.md`. If `spec.json` and `brief.md` already exist (from `@kiro-getspecs` or `@kiro-discovery`), run brownfield init (requirements stub only). Otherwise create `spec.json` and `requirements.md` stub.
    b. Generate requirements: Read .windsurf/skills@kiro-spec-requirements/SKILL.md, then follow its steps
    c. Generate design: Read .windsurf/skills@kiro-spec-design/SKILL.md, then follow its steps
    d. Generate tasks: Read .windsurf/skills@kiro-spec-tasks/SKILL.md, then follow its steps
@@ -73,7 +73,7 @@ Create a complete specification for feature "{feature-name}".
 5. Report completion with file list and task count
 ```
 
-Windsurf does not support programmatic sub-agent dispatch. Execute features in the wave sequentially in the main context.
+If multi-agent is not available, execute features in the wave sequentially.
 
 **After all sub-agents in the wave complete**:
 1. Verify each feature has: spec.json, requirements.md, design.md, tasks.md
@@ -83,9 +83,9 @@ Windsurf does not support programmatic sub-agent dispatch. Execute features in t
 
 ## Step 4: Cross-Spec Review
 
-After all waves complete, spawn a **single sub-agent** for cross-spec consistency review. This is the highest-value quality gate -- it catches issues that per-spec review gates cannot.
+After all waves complete, spawn a **single sub-agent** for cross-spec consistency review. If sub-agent dispatch is not available on this platform, run the review steps inline in the main context. This is the highest-value quality gate -- it catches issues that per-spec review gates cannot.
 
-**Sub-agent task**:
+**Sub-agent / inline task**:
 
 Read ALL generated specs and check for consistency across the entire project:
 - `{{KIRO_DIR}}/specs/*/design.md` (primary: contains interfaces, data models, architecture)
@@ -109,8 +109,8 @@ Check:
 
 Output: CONSISTENT areas + ISSUES with (which specs, what's inconsistent, suggested fix).
 
-**After the review sub-agent returns**:
-- **Critical/important issues found**: Dispatch fix sub-agents for each affected spec to apply the suggested fixes. If the issue is really a decomposition problem (for example boundary overlap or one spec carrying multiple independent seams), stop and return to roadmap/discovery instead of papering over it locally. Re-run cross-spec review after fixes (max 3 remediation rounds).
+**After the review returns**:
+- **Critical/important issues found**: Dispatch fix sub-agents for each affected spec to apply the suggested fixes (or apply fixes inline if sub-agent dispatch is not available). If the issue is really a decomposition problem (for example boundary overlap or one spec carrying multiple independent seams), stop and return to roadmap/discovery instead of papering over it locally. Re-run cross-spec review after fixes (max 3 remediation rounds).
 - **Minor issues only**: Report them for user awareness, proceed to Step 5.
 - **No issues**: Proceed to Step 5.
 

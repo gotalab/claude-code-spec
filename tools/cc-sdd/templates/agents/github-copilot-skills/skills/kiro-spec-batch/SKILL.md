@@ -31,7 +31,7 @@ description: Create complete specs (requirements, design, tasks) for all feature
    - `## Direct Implementation Candidates`
    Do not include these in dependency-wave execution; they are awareness-only inputs for sequencing and consistency review.
 4. For each pending feature in `## Specs (dependency order)`, verify `{{KIRO_DIR}}/specs/<feature>/brief.md` exists
-5. If any brief.md is missing, stop and report: "Missing brief.md for: [list]. Run `/kiro-discovery` to generate briefs first."
+5. If any brief.md is missing, stop and report: "Missing brief.md for: [list]. Run `/kiro-getspecs` (brownfield bootstrap) or `/kiro-discovery` to generate briefs first."
 
 ## Step 2: Build Dependency Waves
 
@@ -65,7 +65,7 @@ Create a complete specification for feature "{feature-name}".
 1. Read the brief at {{KIRO_DIR}}/specs/{feature-name}/brief.md for feature context
 2. Read the roadmap at {{KIRO_DIR}}/steering/roadmap.md for project context
 3. Execute the full spec pipeline. For each phase, read the corresponding skill's SKILL.md for complete instructions (templates, rules, review gates):
-   a. Initialize: Read .github/skills/kiro-spec-init/SKILL.md, then create spec.json and requirements.md
+   a. Initialize: Read `.github/skills/kiro-spec-init/SKILL.md`. If `spec.json` and `brief.md` already exist (from `/kiro-getspecs` or `/kiro-discovery`), run brownfield init (requirements stub only). Otherwise create `spec.json` and `requirements.md` stub.
    b. Generate requirements: Read .github/skills/kiro-spec-requirements/SKILL.md, then follow its steps
    c. Generate design: Read .github/skills/kiro-spec-design/SKILL.md, then follow its steps
    d. Generate tasks: Read .github/skills/kiro-spec-tasks/SKILL.md, then follow its steps

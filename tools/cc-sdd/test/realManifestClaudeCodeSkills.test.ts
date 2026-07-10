@@ -198,6 +198,7 @@ describe('real claude-code-skills manifest', () => {
     expect(await exists(join(cwd, '.claude/skills/kiro-spec-requirements/rules/requirements-review-gate.md'))).toBe(true);
     expect(await exists(join(cwd, '.claude/skills/kiro-validate-gap/rules/gap-analysis.md'))).toBe(true);
     expect(await exists(join(cwd, '.claude/skills/kiro-steering/rules/steering-principles.md'))).toBe(true);
+    expect(await exists(join(cwd, '.claude/skills/kiro-getspecs/rules/getspecs-principles.md'))).toBe(true);
     expect(await exists(join(cwd, '.claude/skills/kiro-steering-custom/rules/steering-principles.md'))).toBe(true);
     expect(await exists(join(cwd, '.claude/skills/kiro-spec-tasks/rules/tasks-generation.md'))).toBe(true);
     expect(await exists(join(cwd, '.claude/skills/kiro-spec-tasks/rules/tasks-parallel-analysis.md'))).toBe(true);
@@ -244,7 +245,7 @@ describe('real claude-code-skills manifest', () => {
     expect(ctx.logs.join('\n')).toMatch(/\d+\/\d+ files written/);
   });
 
-  it('generates exactly 17 skill directories', async () => {
+  it('generates exactly 18 skill directories', async () => {
     const cwd = await mkTmp();
     const ctx = makeIO();
     await runCli(['--lang', 'en', '--manifest', manifestPath, '--overwrite=force', '--claude-skills'], runtime, ctx.io, {}, { cwd, templatesRoot: process.cwd() });
@@ -252,6 +253,7 @@ describe('real claude-code-skills manifest', () => {
     const expectedSkills = [
       'kiro-debug',
       'kiro-discovery',
+      'kiro-getspecs',
       'kiro-review',
       'kiro-spec-batch',
       'kiro-spec-init',

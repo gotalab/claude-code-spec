@@ -6,7 +6,8 @@ New features and improvements for cc-sdd. See [CHANGELOG.md](../../CHANGELOG.md)
 
 ## 🔬 In Development (Unreleased)
 
-No unreleased features at this time. The latest stable release is v3.0.2.
+### Added
+- **`/kiro-getspecs` brownfield bootstrap** — code-first entry point for existing repositories with no `.kiro/` specs. Writes steering, roadmap, and spec seeds (`brief.md`, `spec.json`, `requirements.md` stub) compatible with `/kiro-spec-requirements` and `/kiro-spec-batch`. Claude Code handoff parity and JA/ZH doc mirrors included. Guide: [brownfield-getspecs.md](../guides/brownfield-getspecs.md). ([#176](https://github.com/gotalab/cc-sdd/pull/176))
 
 ---
 

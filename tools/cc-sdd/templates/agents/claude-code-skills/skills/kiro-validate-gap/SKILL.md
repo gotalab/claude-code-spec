@@ -105,3 +105,5 @@ Provide output in the language specified in spec.json with:
 - Or `/kiro-spec-design {feature} -y` to auto-approve requirements and proceed directly
 
 **Note**: Gap analysis is optional but recommended for brownfield projects to inform design decisions.
+
+**Prior bootstrap**: If `.kiro/specs/` was created by `/kiro-getspecs`, generate requirements first via `/kiro-spec-requirements` before running gap analysis.

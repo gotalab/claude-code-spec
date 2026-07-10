@@ -1,0 +1,6 @@
+interface:
+  display_name: "Get Specs"
+  short_description: "Bootstrap brownfield projects into .kiro/ steering, roadmap, and spec seeds from existing code"
+
+policy:
+  allow_implicit_invocation: false

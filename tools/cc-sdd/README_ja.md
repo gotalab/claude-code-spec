@@ -8,7 +8,7 @@
 <a href="./README.md">English</a> | 日本語 | <a href="./README_zh-TW.md">繁體中文</a>
 </sub></div>
 
-**承認済みの仕様を、長時間でも壊れない自律実装ワークフローに変える。** ワンコマンドで agentic SDLC ワークフローを Agent Skills として導入する: discovery, requirements, design, tasks, そしてタスクごとの independent review 付きの自律実装。8 つの AI coding agent に対応、同じ 17-skill セットで動作する。
+**承認済みの仕様を、長時間でも壊れない自律実装ワークフローに変える。** ワンコマンドで agentic SDLC ワークフローを Agent Skills として導入する: brownfield bootstrap, discovery, requirements, design, tasks, そしてタスクごとの independent review 付きの自律実装。8 つの AI coding agent に対応、同じ 18-skill セットで動作する。
 
 👻 **Kiro スタイル。** Kiro IDE の spec-driven / agentic SDLC スタイル。既存の Kiro 仕様書もそのまま使える。
 
@@ -16,11 +16,12 @@
 
 cc-sdd v3.0 は Agent Skills と長時間自律実装を軸にした再構築である。
 
+- **`/kiro-getspecs` による brownfield bootstrap。** `.kiro/` spec がない既存コードベース向け。コードから steering、roadmap、spec seed（`brief.md` + `spec.json` + `requirements.md` stub）を生成し、`/kiro-spec-requirements` または `/kiro-spec-batch` へ続行。詳細は [Brownfield guide](https://github.com/gotalab/cc-sdd/blob/main/docs/guides/brownfield-getspecs.md)。
 - **`/kiro-discovery` が新しいエントリポイント。** discovery が新規依頼を「既存 spec を拡張 / spec 不要で直接実装 / 1 つの新規 spec / 複数 spec に分解 / mixed decomposition」に振り分ける。`brief.md` と必要に応じて `roadmap.md` を書き出すので、セッションを再開しても scope を説明し直さずに続けられる。
 - **`/kiro-impl` による長時間自律実装。** 各タスクに対し fresh implementer が feature flag 越しに TDD (RED → GREEN) で実装、独立した reviewer が機械的検証、失敗時は auto-debug pass が新しいコンテキストで根本原因を調査する。タスク間の知見は `tasks.md` の `## Implementation Notes` で次の implementer に引き継がれる。1 iteration = 1 task、中断後の再実行も安全。
 - **境界中心の spec discipline。** `design.md` に File Structure Plan が入り、タスク境界の根拠になる。タスクには `_Boundary:_` / `_Depends:_` アノテーションが付く。review と validation はスタイルではなく境界違反を見る。
 - **`/kiro-spec-batch` で複数 spec の並列作成。** roadmap から複数 spec を並列生成し、cross-spec review で矛盾・責務重複・インターフェースミスマッチを検出する。
-- **8 つの AI coding agent で Agent Skills を展開。** 17 skills × 8 プラットフォーム、on-demand ロード (progressive disclosure)。Claude Code と Codex は stable、Cursor, Copilot, Windsurf, OpenCode, Gemini CLI, Antigravity は beta。外部依存なし、subagent は各プラットフォーム標準の spawn で立ち上がる。
+- **8 つの AI coding agent で Agent Skills を展開。** 18 skills × 8 プラットフォーム、on-demand ロード (progressive disclosure)。Claude Code と Codex は stable、Cursor, Copilot, Windsurf, OpenCode, Gemini CLI, Antigravity は beta。外部依存なし、subagent は各プラットフォーム標準の spawn で立ち上がる。
 
 Skills モードのワークフローと `/kiro-impl` 内部の詳細は [スキルリファレンス](https://github.com/gotalab/cc-sdd/blob/main/docs/guides/ja/skill-reference.md) を参照。
 
@@ -98,7 +99,7 @@ spec フェーズの典型的な出力（10 分以内）:
 
 ## 対応エージェント
 
-全 8 種類の skills variant は同じ 17-skill セットを配信する。違いは各プラットフォーム統合が実運用でどれだけ検証されているか、である。
+全 8 種類の skills variant は同じ 18-skill セットを配信する。違いは各プラットフォーム統合が実運用でどれだけ検証されているか、である。
 
 | エージェント | Skills モード | 安定度 | レガシーモード |
 |---|---|---|---|
@@ -112,7 +113,7 @@ spec フェーズの典型的な出力（10 分以内）:
 | **Antigravity** | `--antigravity` | Beta (experimental) | — |
 | **Qwen Code** | — | — | `--qwen` |
 
-ここでの "Beta" は「機能が不足している」という意味ではない。17 skills とテンプレートは全 8 プラットフォームで同一である。プラットフォーム統合（subagent spawn 挙動、操作感、`SKILL.md` ロード）が Claude Code と Codex に比べて実運用実績が少なく、エッジケースが残っている可能性があるという意味である。問題に遭遇した場合は [Issues](https://github.com/gotalab/cc-sdd/issues) まで報告いただけると助かる。
+ここでの "Beta" は「機能が不足している」という意味ではない。18 skills とテンプレートは全 8 プラットフォームで同一である。プラットフォーム統合（subagent spawn 挙動、操作感、`SKILL.md` ロード）が Claude Code と Codex に比べて実運用実績が少なく、エッジケースが残っている可能性があるという意味である。問題に遭遇した場合は [Issues](https://github.com/gotalab/cc-sdd/issues) まで報告いただけると助かる。
 
 ## インストール詳細
 
@@ -166,14 +167,14 @@ npx cc-sdd@latest --kiro-dir docs
 ```
 project/
 # Skills モード（推奨）: いずれか 1 つがインストールされる
-├── .claude/skills/           # 17 skills（Claude Code Skills、デフォルト）
-├── .agents/skills/           # 17 skills（Codex Skills）
-├── .cursor/skills/           # 17 skills（Cursor Skills）
-├── .github/skills/           # 17 skills（GitHub Copilot Skills）
-├── .windsurf/skills/         # 17 skills（Windsurf Skills）
-├── .opencode/skills/         # 17 skills（OpenCode Skills）
-├── .gemini/skills/           # 17 skills（Gemini CLI Skills）
-├── .agent/skills/            # 17 skills（Antigravity Skills）
+├── .claude/skills/           # 18 skills（Claude Code Skills、デフォルト）
+├── .agents/skills/           # 18 skills（Codex Skills）
+├── .cursor/skills/           # 18 skills（Cursor Skills）
+├── .github/skills/           # 18 skills（GitHub Copilot Skills）
+├── .windsurf/skills/         # 18 skills（Windsurf Skills）
+├── .opencode/skills/         # 18 skills（OpenCode Skills）
+├── .gemini/skills/           # 18 skills（Gemini CLI Skills）
+├── .agent/skills/            # 18 skills（Antigravity Skills）
 # レガシーコマンドモード（非推奨）
 ├── .claude/commands/kiro/    # 11 スラッシュコマンド（--claude）
 ├── .github/prompts/          # 11 プロンプトコマンド（--copilot）

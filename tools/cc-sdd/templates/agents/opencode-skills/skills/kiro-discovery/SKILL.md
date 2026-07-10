@@ -24,7 +24,11 @@ Gather **only metadata** to determine the action path. Do NOT read full file con
 - **Roadmap check**: If `{{KIRO_DIR}}/steering/roadmap.md` exists, read it. This contains project-level context (approach, scope, constraints, spec list) from a previous discovery session. Use it to restore project context.
 - **Top-level structure**: List the project root directory to note key directories and files. Do NOT recurse into subdirectories.
 
-This step should consume minimal context. If `specs/` is empty and no steering exists, note "greenfield project" and move to Step 2.
+This step should consume minimal context.
+
+**Brownfield bootstrap redirect**: If `specs/` is empty, steering is missing or only partial, and the repo has substantial implementation (not an empty scaffold), recommend `/kiro-getspecs` when the user needs project onboarding — not a new feature idea. Stop after recommending unless the user confirms they want discovery for a new idea anyway.
+
+If `specs/` is empty and no steering exists with minimal code, note "greenfield project" and move to Step 2.
 
 ## Step 2: Determine Action Path
 

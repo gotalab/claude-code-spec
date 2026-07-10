@@ -12,6 +12,7 @@ Use this table when you are deciding which skill to run first.
 
 | You want to... | Start with | Typical next step |
 | --- | --- | --- |
+| Bootstrap cc-sdd on existing code (no specs yet) | `/kiro-getspecs` | `/kiro-spec-requirements` or `/kiro-spec-batch` |
 | Route a new request | `/kiro-discovery` | `kiro-spec-init`, `kiro-spec-batch`, or direct implementation |
 | Create one new spec | `/kiro-spec-init` | `/kiro-spec-requirements` |
 | Create many specs from one initiative | `/kiro-spec-batch` | Review generated specs, then `/kiro-impl` on the approved one(s) |
@@ -35,6 +36,20 @@ Use when you have new work but do not yet know whether it should become one spec
   - implement directly with no spec
   - create one new spec
   - decompose into multiple specs
+
+### `/kiro-getspecs`
+
+Use when the repo already has substantial code but `.kiro/` specs are missing or empty — **brownfield bootstrap**.
+
+- What it does:
+  - reverse-engineers stack, architecture, and module boundaries from code
+  - writes or merges steering (`product.md`, `tech.md`, `structure.md`, `roadmap.md`)
+  - creates spec **seeds** only: `brief.md` + `spec.json` + `requirements.md` stub (project description only; EARS → `/kiro-spec-requirements`)
+  - does **not** write EARS requirements body, design, or tasks
+- Typical next step:
+  - `/kiro-spec-requirements <slug>` for one seed
+  - `/kiro-spec-batch` when roadmap lists multiple seeds
+- Full rationale: [Brownfield Bootstrap with getSpecs](./brownfield-getspecs.md)
 
 ### `/kiro-spec-batch`
 
