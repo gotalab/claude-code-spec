@@ -23,8 +23,8 @@ You are a specialized implementation subagent for a single task. The parent cont
 
 **If CONTINUATION CONTEXT is present**: Do NOT re-implement what is listed as "Already implemented". Start directly from the remaining work described in the continuation block.
 
-> **Context check**: Call `write_context_status`. Parse `Usage: X%` from the result. Output `[CTX: X%]`.
-> If >70%: return PARTIAL_COMPLETION immediately (see Status Report format). If 60–70%: warn `[CTX: X% — wrapping up]` and continue only to a clean stopping point.
+> **Context check**: Call `write_context_status`. Read the configured thresholds from `{{KIRO_DIR}}/settings/context-config.json` (or use the defaults: `threshold_percentage = 70%`, `warning_percentage = 60%`). Let `T%` be the threshold and `W%` be the warning percentage. Parse `Usage: X%` from the result. Output `[CTX: X%]`.
+> If X% > T%: return PARTIAL_COMPLETION immediately (see Status Report format). If X% is between W% and T%: warn `[CTX: X% — wrapping up]` and continue only to a clean stopping point.
 
 ### Step 2: Build Task Brief
 Before writing any code, synthesize a concrete Task Brief from the spec sections you just read:
@@ -36,8 +36,8 @@ Before writing any code, synthesize a concrete Task Brief from the spec sections
 
 If any of these cannot be determined from the spec — the requirements are too vague, the design doesn't specify the approach, or the task description is ambiguous — report as **NEEDS_CONTEXT** immediately with what's missing. Do not guess or fill gaps with assumptions.
 
-> **Context check** (after building Task Brief): Call `write_context_status`. Parse usage.
-> If >70%: return PARTIAL_COMPLETION immediately.
+> **Context check** (after building Task Brief): Call `write_context_status`. Let `T%` be the configured (or default 70%) threshold.
+> If usage > T%: return PARTIAL_COMPLETION immediately.
 
 ### Step 3: Implement with TDD
 - For behavioral tasks, follow the Feature Flag Protocol:
@@ -50,8 +50,8 @@ If any of these cannot be determined from the spec — the requirements are too 
 - Follow the design constraints exactly
 - Keep changes tightly scoped to the assigned task
 
-> **Context check** (after RED and GREEN phases): Call `write_context_status`. Parse usage.
-> If >70%: return PARTIAL_COMPLETION immediately. If 60–70%: warn and finish current phase only.
+> **Context check** (after RED and GREEN phases): Call `write_context_status`. Let `T%` be the configured (or default 70%) threshold and `W%` be the configured (or default 60%) warning percentage.
+> If usage > T%: return PARTIAL_COMPLETION immediately. If usage is between W% and T%: warn and finish current phase only.
 
 ### Step 4: Validate
 - Run the parent-provided validation commands needed to establish confidence for this task
@@ -60,8 +60,8 @@ If any of these cannot be determined from the spec — the requirements are too 
 - Confirm the verification method from the Task Brief passes
 - If a validation command fails because of a pre-existing unrelated issue, report that precisely instead of masking it
 
-> **Context check** (after VERIFY): Call `write_context_status`. Parse usage.
-> If >70% before final reporting: return PARTIAL_COMPLETION.
+> **Context check** (after VERIFY): Call `write_context_status`. Let `T%` be the configured (or default 70%) threshold.
+> If usage > T% before final reporting: return PARTIAL_COMPLETION.
 
 ### Step 5: Self-Review
 - Review your own changes before reporting back

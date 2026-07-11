@@ -51,6 +51,7 @@ After all parallel research completes, synthesize implementation brief before st
 - Inspect repository-local sources of truth in this order: project scripts/manifests (`package.json`, `pyproject.toml`, `go.mod`, `Cargo.toml`, app manifests), task runners (`Makefile`, `justfile`), CI/workflow files, existing e2e/integration configs, then `README*`
 - Derive a canonical validation set for this repo: `TEST_COMMANDS`, `BUILD_COMMANDS`, and `SMOKE_COMMANDS`
 - Prefer commands already used by repo automation over ad hoc shell pipelines
+- For `SMOKE_COMMANDS`, choose the lightest trustworthy runtime-liveness check for the app shape (for example: root URL load, Electron launch, CLI `--help`, service health endpoint, mobile simulator/e2e harness if one already exists)
 - Keep the full command set in the parent context, and pass only the task-relevant subset to implementer and reviewer sub-agents
 
 **Establish repo baseline**:
@@ -74,19 +75,18 @@ After all parallel research completes, synthesize implementation brief before st
 Read `{{KIRO_DIR}}/specs/{feature}/tasks.md` and build a flat list of subtask units:
 1. Determine selected tasks from the argument (or all unchecked `- [ ]` if not provided)
 2. For each selected task:
+   - Skip tasks with `_Blocked:_` annotation
+   - Check `_Depends:_` annotations -- verify referenced tasks are `[x]`. If prerequisites incomplete, execute them first or warn the user.
+   - Use `_Boundary:_` annotations to understand the task's component scope
    - Has subtask entries (lines matching `- [ ] N.M` or `- [x] N.M`) → collect each **pending** subtask individually (e.g., `1.1`, `1.2`)
    - Leaf task (no `N.M` subtask lines) → treat the task itself as a single unit (e.g., `2`)
 3. Skip already-completed subtasks (`- [x]`)
 
 Result: a flat ordered list of subtask units (e.g., `["1.1", "1.2", "2"]`).
 
-### Step 3: Build Execution Plan
+### Step 3: Execute Implementation
 
-Re-read `tasks.md` to identify `(P)` markers. Group the resolved subtask list into execution batches:
-- Consecutive `(P)`-marked subtasks with no cross-dependencies → one **parallel batch** (spawn simultaneously)
-- All other subtasks → individual **sequential steps**
-
-### Step 4: Execute Implementation Loop
+#### Autonomous Mode (sub-agent dispatch)
 
 **Iteration discipline**: Process exactly ONE sub-task (e.g., 1.1) per iteration. Do NOT batch multiple sub-tasks into a single sub-agent dispatch. Each iteration follows the full cycle: dispatch implementer → review → commit → re-read tasks.md → next.
 
@@ -172,12 +172,37 @@ For each subtask unit:
   - If `NEXT_ACTION: BLOCK_TASK` → append `_Blocked: <ROOT_CAUSE>_` to tasks.md, skip to next task.
   - If `NEXT_ACTION: RETRY_TASK` → preserve the current worktree; spawn a **new** implementer sub-agent with the debug report's `FIX_PLAN`, `NOTES`, and the current `git diff`.
   - Max 2 debug rounds per task.
+  - Record debug findings in `## Implementation Notes` (this helps subsequent tasks avoid the same issue).
 
 **`(P)` markers**: Tasks marked `(P)` in tasks.md indicate they have no inter-dependencies and could theoretically run in parallel. However, kiro-ralph-impl processes them sequentially (one at a time) to avoid git conflicts and simplify review.
 
 **Completion check**: If all remaining tasks are BLOCKED, stop and report blocked tasks with reasons to the user.
 
 **Fallback**: If multi-agent is not available, fall back to manual mode execution for all tasks.
+
+#### Manual Mode (main context)
+
+For each selected task:
+
+**1. Build Task Brief**:
+Before writing any code, read the relevant sections of requirements.md and design.md for this task and clarify:
+- What observable behaviors must be true when done (acceptance criteria)
+- What files/functions/tests must exist (completion definition)
+- What technical decisions to follow from design.md (design constraints)
+- How to confirm the task works (verification method)
+
+**2. Execute TDD cycle** (Kent Beck's RED → GREEN → REFACTOR):
+- **RED**: Write test for the next small piece of functionality based on the acceptance criteria. Test should fail.
+- **GREEN**: Implement simplest solution to make test pass, following the design constraints.
+- **REFACTOR**: Improve code structure, remove duplication. All tests must still pass.
+- **VERIFY**: All tests pass (new and existing), no regressions. Confirm verification method passes.
+- **REVIEW**:
+  - `required`: Apply `kiro-review` before marking the task complete. If the host supports fresh subagents in manual mode, use a fresh reviewer; otherwise perform the review in the main context using the `kiro-review` protocol. Do NOT continue until the verdict is parseably `APPROVED`.
+  - `inline`: Apply `kiro-review` in the main context before marking the task complete.
+  - `off`: Skip task-local review, but note that `kiro-validate-impl` becomes the primary quality gate before any feature-level completion claim.
+- **MARK COMPLETE**:
+  - `required|inline`: Only after review returns `APPROVED`, apply `kiro-verify-completion`, then update the checkbox from `- [ ]` to `- [x]` in tasks.md.
+  - `off`: Apply `kiro-verify-completion`, then update the checkbox from `- [ ]` to `- [x]` in tasks.md.
 
 ### Step 5: Final Validation
 - After all tasks complete, run `/kiro-validate-impl {feature}` as a GO/NO-GO gate.
@@ -227,6 +252,9 @@ Format: Concise, in the language specified in spec.json.
 
 **Upstream Ownership Detected**:
 - Route the fix back to the owning upstream spec, keep the downstream task blocked until that contract is repaired.
+
+**Task Plan Invalidated During Implementation**:
+- If debug returns `NEXT_ACTION: STOP_FOR_HUMAN` because of task ordering, boundary, or decomposition problems, stop and return for human review of `tasks.md` or the approved plan instead of forcing a code workaround.
 
 **Session Interrupted**:
 - Safe to re-run `/kiro-ralph-impl $1` — completed tasks are already `[x]` in tasks.md and committed to git.
